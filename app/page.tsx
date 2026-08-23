@@ -61,12 +61,42 @@ const COPY = {
     autoRange: 'Wertebereich automatisch ausnutzen', noData: 'NoData-Behandlung', nearest: 'Nächsten gültigen Wert übernehmen',
     medianFill: 'Mit Medianwert auffüllen', rangeOk: 'Ausgabebereich {min} bis {max} m passt.',
     rangeBad: 'Werte liegen außerhalb des gewählten Ausgabebereichs.', generating: 'PGM wird erzeugt …',
+    openInfo: 'Erklärung öffnen', recommendation: 'Empfehlung',
+    offsetHelpTitle: 'Offset: niedrigster darstellbarer Höhenwert',
+    offsetHelpText: 'Der Offset ist die Höhe, die im PGM dem Pixelwert 0 entspricht. Alle übrigen Höhen werden relativ zu diesem Startwert gespeichert.',
+    offsetHelpNote: 'Der Offset sollte gleich oder etwas kleiner als das Minimum des GeoTIFFs sein. Ein zu hoher Wert führt zu abgeschnittenen Tiefstwerten.',
+    scaleHelpTitle: 'Skalierung: Höhenabstand je Grauwertstufe',
+    scaleHelpText: 'Die Skalierung gibt an, wie viele Meter eine Stufe im 16-Bit-PGM entspricht. Mit 0,003 m beträgt die theoretische Auflösung 3 mm pro Stufe.',
+    scaleHelpNote: 'Kleinere Werte sind präziser, verkleinern aber den insgesamt darstellbaren Höhenbereich.',
+    autoRangeHelpTitle: 'Automatischen Wertebereich berechnen',
+    autoRangeHelpText: 'Die App setzt Offset und Skalierung so, dass Minimum und Maximum des gültigen Rasters möglichst vollständig in 0 bis 65.535 passen.',
+    autoRangeHelpNote: 'Ein guter Ausgangspunkt. Kontrolliere danach die Quantisierung und mögliche abgeschnittene Werte im PGM-Prüfbericht.',
+    noDataHelpTitle: 'Was bedeutet NoData?',
+    noDataHelpText: 'NoData kennzeichnet Rasterzellen ohne gültige Geoid-Höhe, zum Beispiel außerhalb der Modellgrenze oder in Datenlücken. Ein PGM kennt hier keinen universellen NoData-Wert; deshalb müssen diese Zellen beim Export ersetzt werden.',
+    noDataHelpNote: 'Die gültigen Originalwerte werden durch diese Auswahl nicht verändert.',
+    nearestHelpTitle: 'Nächsten gültigen Wert übernehmen',
+    nearestHelpText: 'Jede NoData-Zelle erhält den Höhenwert der räumlich nächstgelegenen gültigen Rasterzelle. Dadurch setzt sich die lokale Randhöhe in die Lücke fort.',
+    nearestHelpNote: 'Für kleine Löcher und schmale Randbereiche meist die beste Wahl. Große NoData-Flächen können dadurch streifen- oder flächenartig fortgeschrieben werden.',
+    medianHelpTitle: 'Mit Medianwert auffüllen',
+    medianHelpText: 'Alle NoData-Zellen erhalten denselben, aus einer Stichprobe von bis zu 50.000 gültigen Höhenwerten ermittelten Median. Einzelne Extremwerte beeinflussen ihn weniger stark als den Mittelwert.',
+    medianHelpNote: 'Schnell und robust, erzeugt aber in jeder Lücke eine ebene Fläche. Eher für neutrale Füllbereiche als für lokale Geländeübergänge geeignet.',
+    noDataDetected: '{count} NoData-Zellen erkannt ({percent} % des Rasters).',
+    noDataNotDetected: 'Keine NoData-Zellen erkannt – diese Einstellung verändert den aktuellen Export nicht.',
+    rangeHelpTitle: 'Prüfung des 16-Bit-Ausgabebereichs',
+    rangeHelpText: 'Ein 16-Bit-PGM kann 65.536 Stufen von 0 bis 65.535 speichern. Der darstellbare Höhenbereich ergibt sich aus Offset + Skalierung × Pixelwert.',
+    rangeHelpNote: '„Passt“ bedeutet: Kein gültiger Höhenwert muss am unteren oder oberen Ende abgeschnitten werden.',
     export: 'PGM erzeugen & laden', downloadAgain: 'Erneut laden', spatialCheck: '03 / Räumliche Prüfung',
     coverage: 'Abdeckung des Datensatzes', spatialPreview: 'Räumliche Vorschau', raster: 'Raster',
     footprintReady: 'Footprint erscheint nach dem Einlesen', footprintText: 'Rahmen und gültiger Datenbereich werden getrennt dargestellt.',
     preparingMap: 'Karte wird vorbereitet', colorScale: 'Farbskala des Höhenrasters', validArea: 'gültiger Datenbereich',
     map: 'Karte: OpenStreetMap', minimum: 'Minimum', maximum: 'Maximum', mean: 'Mittelwert', valid: 'Gültig',
     protocol: 'Datensatz-Protokoll', metadataTitle: 'Metadaten auf einen Blick.', metadataView: 'Metadatenansicht',
+    coverageHelpTitle: 'Was zeigt die Kartenabdeckung?',
+    coverageHelpText: 'Die Karte zeigt die geografische Bounding Box des GeoTIFFs. Wenn genügend gültige Rasterzellen vorliegen, markiert die grüne Kontur zusätzlich deren tatsächlichen Grenzverlauf.',
+    coverageHelpNote: 'Die farbige Rasterdarstellung ist eine vereinfachte Vorschau. Sie verändert weder das GeoTIFF noch das exportierte PGM.',
+    metadataHelpTitle: 'So liest du die Metadaten',
+    metadataHelpText: 'Raster beschreibt Dateiaufbau und Speichertyp, Raumbezug die Positionierung und Pixelgeometrie, Höhenwerte die Statistik des ersten Rasterbands. NoData-Zellen werden ausgeschlossen; der Median wird aus einer Stichprobe von bis zu 50.000 gültigen Werten geschätzt.',
+    metadataHelpNote: 'Fehlender oder falscher CRS/EPSG-Bezug kann die Kartenlage verfälschen, auch wenn die Höhenwerte selbst korrekt gelesen werden.',
     overview: 'Übersicht', pgmHeader: 'PGM-Kopf', pixels: 'Pixel', noFile: 'Noch keine Datei', bands: 'Bänder',
     dataType: 'Datentyp', compression: 'Kompression', ifdLevels: 'IFD-Ebenen', uncompressed: 'Unkomprimiert',
     spatialReference: 'Raumbezug', autoDetect: 'Wird automatisch erkannt', noEpsg: 'Kein EPSG-Code',
@@ -116,11 +146,41 @@ const COPY = {
     noData: 'NoData handling', nearest: 'Use nearest valid value', medianFill: 'Fill with median value',
     rangeOk: 'Output range {min} to {max} m fits.', rangeBad: 'Values fall outside the selected output range.',
     generating: 'Generating PGM …', export: 'Generate & download PGM', downloadAgain: 'Download again',
+    openInfo: 'Open explanation', recommendation: 'Recommendation',
+    offsetHelpTitle: 'Offset: lowest representable elevation',
+    offsetHelpText: 'The offset is the elevation represented by pixel value 0 in the PGM. Every other elevation is stored relative to this starting value.',
+    offsetHelpNote: 'Set it equal to or slightly below the GeoTIFF minimum. An offset that is too high clips the lowest elevations.',
+    scaleHelpTitle: 'Scale: elevation interval per grey level',
+    scaleHelpText: 'Scale specifies how many metres one step in the 16-bit PGM represents. A value of 0.003 m gives a theoretical resolution of 3 mm per step.',
+    scaleHelpNote: 'Smaller values provide finer precision but reduce the total elevation range that can be represented.',
+    autoRangeHelpTitle: 'Calculate the output range automatically',
+    autoRangeHelpText: 'The app sets offset and scale so that the valid raster minimum and maximum fit as fully as possible into values 0 to 65,535.',
+    autoRangeHelpNote: 'A good starting point. Afterwards, check quantization and clipped values in the PGM validation report.',
+    noDataHelpTitle: 'What does NoData mean?',
+    noDataHelpText: 'NoData marks raster cells without a valid geoid elevation, for example outside the model boundary or in data gaps. A PGM has no universal NoData value, so these cells must be replaced during export.',
+    noDataHelpNote: 'This selection does not change any valid source values.',
+    nearestHelpTitle: 'Use the nearest valid value',
+    nearestHelpText: 'Each NoData cell receives the elevation of the spatially nearest valid raster cell. This extends the local edge elevation into the gap.',
+    nearestHelpNote: 'Usually best for small holes and narrow edge areas. Across large NoData regions it can extend values into stripe-like or broad areas.',
+    medianHelpTitle: 'Fill with the median value',
+    medianHelpText: 'Every NoData cell receives the same median estimated from a sample of up to 50,000 valid elevations. Extreme values affect the median less than they affect the mean.',
+    medianHelpNote: 'Fast and robust, but it creates a flat surface in every gap. Better for neutral fill regions than for local terrain transitions.',
+    noDataDetected: '{count} NoData cells detected ({percent}% of the raster).',
+    noDataNotDetected: 'No NoData cells detected — this setting does not change the current export.',
+    rangeHelpTitle: '16-bit output-range check',
+    rangeHelpText: 'A 16-bit PGM stores 65,536 levels from 0 to 65,535. The representable elevation range is calculated as offset + scale × pixel value.',
+    rangeHelpNote: '“Fits” means that no valid elevation needs to be clipped at either end of the range.',
     spatialCheck: '03 / Spatial check', coverage: 'Dataset coverage', spatialPreview: 'Spatial preview', raster: 'Raster',
     footprintReady: 'Footprint appears after reading', footprintText: 'Extent and valid data area are shown separately.',
     preparingMap: 'Preparing map', colorScale: 'Elevation raster color scale', validArea: 'valid data area',
     map: 'Map: OpenStreetMap', minimum: 'Minimum', maximum: 'Maximum', mean: 'Mean', valid: 'Valid',
     protocol: 'Dataset record', metadataTitle: 'Metadata at a glance.', metadataView: 'Metadata view', overview: 'Overview',
+    coverageHelpTitle: 'What does the map coverage show?',
+    coverageHelpText: 'The map shows the geographic bounding box of the GeoTIFF. When enough valid raster cells are available, the green outline additionally marks their actual boundary.',
+    coverageHelpNote: 'The coloured raster is a simplified preview. It changes neither the GeoTIFF nor the exported PGM.',
+    metadataHelpTitle: 'How to read the metadata',
+    metadataHelpText: 'Raster describes file structure and storage type, spatial reference describes positioning and pixel geometry, and elevation values summarise the first raster band. NoData cells are excluded; the median is estimated from a sample of up to 50,000 valid values.',
+    metadataHelpNote: 'A missing or incorrect CRS/EPSG reference can distort the map position even when the elevation values themselves are read correctly.',
     pgmHeader: 'PGM header', pixels: 'pixels', noFile: 'No file yet', bands: 'Bands', dataType: 'Data type',
     compression: 'Compression', ifdLevels: 'IFD levels', uncompressed: 'Uncompressed', spatialReference: 'Spatial reference',
     autoDetect: 'Detected automatically', noEpsg: 'No EPSG code', rasterType: 'Raster type', pixelArea: 'Pixel = area',
@@ -179,6 +239,29 @@ const formatBytes = (bytes: number, language: Language) => {
 };
 
 const formatCoordinate = (value: number, language: Language) => `${formatNumber(value, 6, language)}°`;
+
+function InfoTip({ title, text, note, openLabel, align = 'start' }: {
+  title: string;
+  text: string;
+  note?: string;
+  openLabel: string;
+  align?: 'start' | 'end';
+}) {
+  return (
+    <details className={`info-tip align-${align}`} onKeyDown={(event) => {
+      if (event.key === 'Escape') event.currentTarget.removeAttribute('open');
+    }}>
+      <summary aria-label={`${openLabel}: ${title}`} title={`${openLabel}: ${title}`}>
+        <Info size={12} aria-hidden="true" />
+      </summary>
+      <span className="info-popover" role="note">
+        <strong>{title}</strong>
+        <span>{text}</span>
+        {note && <small><Sparkles size={12} aria-hidden="true" /> {note}</small>}
+      </span>
+    </details>
+  );
+}
 
 const localizeError = (message: string, language: Language) => {
   if (language === 'de') return message;
@@ -332,6 +415,7 @@ export default function Home() {
   const rangeFits = Boolean(analysis && Number.isFinite(numericOffset) && Number.isFinite(numericScale) && numericScale > 0
     && analysis.stats.min >= numericOffset && analysis.stats.max <= outputMaximum);
   const validPercent = analysis ? (analysis.stats.validCount / (analysis.width * analysis.height)) * 100 : 0;
+  const noDataPercent = analysis ? (analysis.stats.noDataCount / (analysis.width * analysis.height)) * 100 : 0;
   const isRegional = Boolean(analysis?.wgs84Bbox && (analysis.wgs84Bbox[2] - analysis.wgs84Bbox[0] < 350
     || analysis.wgs84Bbox[3] - analysis.wgs84Bbox[1] < 170));
 
@@ -529,18 +613,40 @@ export default function Home() {
               <h2>{t('configure')}</h2></div></div><span className="format-tag">P5 · 16 BIT</span></div>
             <div className="preset-card"><span><Sparkles size={16} /></span><div><strong>{t('preset')}</strong><small>{t('presetMeta')}</small></div><CheckCircle2 size={17} /></div>
             <div className="field-grid">
-              <label><span>Offset <Info size={12} /></span><div className="number-field"><input value={offset} inputMode="decimal"
-                onChange={(event) => { setOffset(event.target.value); setPgmResult(null); }} /><em>m</em></div></label>
-              <label><span>{t('scale')} <Info size={12} /></span><div className="number-field"><input value={scale} inputMode="decimal"
-                onChange={(event) => { setScale(event.target.value); setPgmResult(null); }} /><em>m</em></div></label>
+              <div className="field-control"><div className="field-label-row"><label htmlFor="pgm-offset">Offset</label>
+                <InfoTip title={t('offsetHelpTitle')} text={t('offsetHelpText')} note={t('offsetHelpNote')} openLabel={t('openInfo')} />
+              </div><div className="number-field"><input id="pgm-offset" value={offset} inputMode="decimal"
+                onChange={(event) => { setOffset(event.target.value); setPgmResult(null); }} /><em>m</em></div></div>
+              <div className="field-control"><div className="field-label-row"><label htmlFor="pgm-scale">{t('scale')}</label>
+                <InfoTip title={t('scaleHelpTitle')} text={t('scaleHelpText')} note={t('scaleHelpNote')} openLabel={t('openInfo')} align="end" />
+              </div><div className="number-field"><input id="pgm-scale" value={scale} inputMode="decimal"
+                onChange={(event) => { setScale(event.target.value); setPgmResult(null); }} /><em>m</em></div></div>
             </div>
-            <button className="auto-range" type="button" onClick={setAutomaticRange} disabled={!analysis}><SlidersHorizontal size={14} /> {t('autoRange')}</button>
-            <label className="select-field"><span>{t('noData')}</span><select value={noDataStrategy}
+            <div className="auto-range-row"><button className="auto-range" type="button" onClick={setAutomaticRange} disabled={!analysis}>
+              <SlidersHorizontal size={14} /> {t('autoRange')}</button>
+              <InfoTip title={t('autoRangeHelpTitle')} text={t('autoRangeHelpText')} note={t('autoRangeHelpNote')} openLabel={t('openInfo')} />
+            </div>
+            <div className="select-field"><div className="field-label-row"><label htmlFor="nodata-strategy">{t('noData')}</label>
+              <InfoTip title={t('noDataHelpTitle')} text={t('noDataHelpText')} note={t('noDataHelpNote')} openLabel={t('openInfo')} align="end" />
+            </div><select id="nodata-strategy" value={noDataStrategy}
               onChange={(event) => { setNoDataStrategy(event.target.value as 'nearest' | 'median'); setPgmResult(null); }}>
-              <option value="nearest">{t('nearest')}</option><option value="median">{t('medianFill')}</option></select></label>
+              <option value="nearest">{t('nearest')}</option><option value="median">{t('medianFill')}</option></select></div>
+            <div className="strategy-help" aria-live="polite">
+              <strong>{noDataStrategy === 'nearest' ? t('nearestHelpTitle') : t('medianHelpTitle')}</strong>
+              <p>{noDataStrategy === 'nearest' ? t('nearestHelpText') : t('medianHelpText')}</p>
+              <small><Sparkles size={12} aria-hidden="true" /> <b>{t('recommendation')}:</b>{' '}
+                {noDataStrategy === 'nearest' ? t('nearestHelpNote') : t('medianHelpNote')}</small>
+              <em>{analysis && analysis.stats.noDataCount > 0
+                ? fill(t('noDataDetected'), {
+                  count: formatNumber(analysis.stats.noDataCount, 0, language),
+                  percent: formatNumber(noDataPercent, 2, language),
+                })
+                : t('noDataNotDetected')}</em>
+            </div>
             <div className={`range-check ${rangeFits ? 'is-valid' : 'is-invalid'}`}>
               {rangeFits ? <CheckCircle2 size={15} /> : <AlertTriangle size={15} />}
               <span>{rangeFits ? fill(t('rangeOk'), { min: formatNumber(numericOffset, 3, language), max: formatNumber(outputMaximum, 3, language) }) : t('rangeBad')}</span>
+              <InfoTip title={t('rangeHelpTitle')} text={t('rangeHelpText')} note={t('rangeHelpNote')} openLabel={t('openInfo')} align="end" />
             </div>
             <button className="export-button" type="button" disabled={!analysis || !rangeFits || generating} onClick={() => void exportPgm()}>
               {generating ? <LoaderCircle className="spin" size={18} /> : <Download size={18} />}{generating ? t('generating') : t('export')}
@@ -552,7 +658,10 @@ export default function Home() {
         </article>
 
         <article className="map-panel">
-          <div className="map-toolbar"><div><span className="panel-label">{t('spatialCheck')}</span><strong>{analysis ? t('coverage') : t('spatialPreview')}</strong></div>
+          <div className="map-toolbar"><div><span className="panel-label">{t('spatialCheck')}</span><div className="map-title-row">
+            <strong>{analysis ? t('coverage') : t('spatialPreview')}</strong>
+            <InfoTip title={t('coverageHelpTitle')} text={t('coverageHelpText')} note={t('coverageHelpNote')} openLabel={t('openInfo')} />
+          </div></div>
             <div className="map-toolbar-actions">{analysis?.crsCode && <span className="crs-tag">{analysis.crsCode}</span>}
               <button type="button" className="icon-text-button" onClick={() => setShowRaster((value) => !value)} disabled={!analysis}>
                 {showRaster ? <Eye size={15} /> : <EyeOff size={15} />}{t('raster')}</button></div></div>
@@ -576,7 +685,10 @@ export default function Home() {
       </section>
 
       <section className="analysis-section" aria-labelledby="analysis-title">
-        <div className="analysis-header"><div><p className="eyebrow">{t('protocol')}</p><h2 id="analysis-title">{t('metadataTitle')}</h2></div>
+        <div className="analysis-header"><div><p className="eyebrow">{t('protocol')}</p><div className="analysis-title-row">
+          <h2 id="analysis-title">{t('metadataTitle')}</h2>
+          <InfoTip title={t('metadataHelpTitle')} text={t('metadataHelpText')} note={t('metadataHelpNote')} openLabel={t('openInfo')} />
+        </div></div>
           <div className="tabs" role="tablist" aria-label={t('metadataView')}>
             <button className={activeTab === 'overview' ? 'active' : ''} onClick={() => setActiveTab('overview')} type="button"><Database size={14} /> {t('overview')}</button>
             <button className={activeTab === 'geokeys' ? 'active' : ''} onClick={() => setActiveTab('geokeys')} type="button"><Braces size={14} /> GeoKeys</button>

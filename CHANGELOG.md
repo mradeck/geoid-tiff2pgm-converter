@@ -1,5 +1,11 @@
 # Changelog
 
+## v26.08.4.0 — 2026-08-23
+
+- Anklickbare und tastaturbedienbare „i“-Hilfen für Offset, Skalierung, Automatik, Wertebereich, Karte und Metadaten ergänzt
+- NoData-Verfahren mit Wirkung, Empfehlung und dateibezogener Anzahl ausführlich erläutert
+- Hilfe-Popover für helles, dunkles und mobiles Interface optimiert
+
 ## v26.08.3.0 — 2026-08-23
 
 - Hilfe-/Bugreport-/Kontaktdialog in deutscher und englischer Sprache ergänzt
