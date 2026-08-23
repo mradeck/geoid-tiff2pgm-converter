@@ -48,9 +48,9 @@ body {
   transition: background-color .2s ease, color .2s ease;
 }
 
-button, input, select { font: inherit; }
+button, input, select, textarea { font: inherit; }
 button, a { -webkit-tap-highlight-color: transparent; }
-button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible {
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
   outline: 3px solid rgba(23, 79, 60, .22);
   outline-offset: 2px;
 }
@@ -88,6 +88,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 }
 .utility-toggle:hover { border-color: var(--line-dark); background: var(--card); transform: translateY(-1px); }
 .theme-toggle { width: 34px; padding: 7px; }
+.contact-toggle { color: var(--forest); font-size: 9px; font-weight: 750; }
 .language-toggle b { font: 750 9px var(--font-geist-mono); letter-spacing: .06em; }
 .language-toggle span { font-size: 14px; line-height: 1; }
 
@@ -287,16 +288,70 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .footer-app-card small { max-width: 470px; margin-top: 6px; color: #afc0b7; font-size: 9px; line-height: 1.5; }
 .footer-meta { position: relative; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; }
 .footer-meta nav { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 14px; }
-.footer-meta nav a {
+.footer-meta nav a, .footer-meta nav button {
   display: inline-flex; align-items: center; gap: 6px; padding: 7px 9px; border: 1px solid var(--line); border-radius: 8px;
   color: var(--forest); background: var(--cream); text-decoration: none; font-size: 9px; font-weight: 750;
+  cursor: pointer;
 }
-.footer-meta nav a:hover { border-color: var(--forest); }
+.footer-meta nav a:hover, .footer-meta nav button:hover { border-color: var(--forest); }
 .footer-meta > p { max-width: calc(100% - 130px); margin: 2px 0; color: var(--muted); font-size: 9px; line-height: 1.5; }
 .version-pill {
   position: absolute; right: 18px; bottom: 18px; border: 1px solid var(--line); border-radius: 999px; padding: 7px 9px;
   color: var(--ink); background: var(--cream); font: 700 8px var(--font-geist-mono);
 }
+
+.contact-modal {
+  position: fixed; inset: 0; z-index: 2000; display: grid; place-items: center; padding: 24px;
+  background: rgba(8,17,13,.64); backdrop-filter: blur(8px); opacity: 0; visibility: hidden; pointer-events: none;
+  transition: opacity .18s ease, visibility .18s ease;
+}
+.contact-modal.is-open { opacity: 1; visibility: visible; pointer-events: auto; }
+.contact-dialog {
+  position: relative; width: min(680px, 100%); max-height: min(780px, calc(100vh - 48px)); overflow-y: auto;
+  border: 1px solid var(--line); border-radius: 18px; padding: 25px; color: var(--ink); background: var(--card);
+  box-shadow: 0 28px 90px rgba(5,14,10,.3); transform: translateY(10px) scale(.985);
+  transition: transform .18s ease;
+}
+.contact-modal.is-open .contact-dialog { transform: translateY(0) scale(1); }
+.contact-close {
+  position: absolute; top: 17px; right: 17px; width: 34px; height: 34px; display: grid; place-items: center;
+  border: 1px solid var(--line); border-radius: 9px; color: var(--muted); background: var(--cream); cursor: pointer;
+}
+.contact-heading { display: flex; align-items: center; gap: 12px; padding-right: 44px; }
+.contact-heading > span, .contact-success > span {
+  width: 43px; height: 43px; flex: 0 0 auto; display: grid; place-items: center; border-radius: 11px;
+  color: var(--chartreuse); background: var(--forest);
+}
+.contact-heading h2, .contact-success h2 { margin: 4px 0 0; font-size: 25px; letter-spacing: -.04em; }
+.contact-intro, .contact-success > p:not(.panel-label) { margin: 16px 0 18px; color: var(--muted); font-size: 11px; line-height: 1.6; }
+.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.contact-grid label { display: block; }
+.contact-grid label > span { display: block; margin-bottom: 6px; color: #59655f; font-size: 9px; font-weight: 750; }
+.contact-grid input, .contact-grid select, .contact-grid textarea {
+  width: 100%; border: 1px solid var(--line); border-radius: 9px; padding: 11px; color: var(--ink); background: white;
+  font-size: 11px; outline: none;
+}
+.contact-grid textarea { min-height: 122px; resize: vertical; line-height: 1.5; }
+.contact-grid input:focus, .contact-grid select:focus, .contact-grid textarea:focus {
+  border-color: #7d9d8c; box-shadow: 0 0 0 3px rgba(23,79,60,.08);
+}
+.contact-message { grid-column: 1 / -1; }
+.contact-note { margin-top: 12px; display: flex; align-items: flex-start; gap: 8px; padding: 10px; border-radius: 9px; color: #3e6752; background: #edf7ee; font-size: 9px; line-height: 1.5; }
+.contact-note svg, .contact-error svg { flex: 0 0 auto; margin-top: 1px; }
+.contact-error { margin-top: 10px; display: flex; align-items: flex-start; gap: 8px; padding: 10px; border-radius: 9px; color: #8f371e; background: #fff0ea; font-size: 9px; line-height: 1.5; }
+.contact-actions { margin-top: 15px; display: flex; align-items: center; gap: 10px; }
+.contact-actions > span { margin-right: auto; color: var(--muted); font-size: 8px; }
+.contact-actions > a { display: inline-flex; align-items: center; gap: 6px; color: var(--forest); text-decoration: none; font-size: 9px; font-weight: 750; }
+.contact-actions > a:hover { text-decoration: underline; }
+.contact-submit {
+  min-height: 40px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 9px;
+  padding: 10px 14px; color: white; background: var(--forest); cursor: pointer; font-size: 10px; font-weight: 750;
+}
+.contact-submit:disabled { opacity: .6; cursor: wait; }
+.contact-success { min-height: 300px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 28px; }
+.contact-success > span { margin-bottom: 18px; }
+.contact-success .contact-submit { margin-top: 8px; }
+.honeypot { position: absolute !important; left: -10000px !important; width: 1px !important; height: 1px !important; overflow: hidden !important; }
 
 :root[data-theme='dark'] body {
   background: radial-gradient(circle at 80% 0%, rgba(120, 223, 168, .08), transparent 24%), var(--paper);
@@ -358,6 +413,14 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 :root[data-theme='dark'] .compatibility-note { border-color: #5e4823; color: #f2c47d; }
 :root[data-theme='dark'] .compatibility-note p { color: #d6b77f; }
 :root[data-theme='dark'] .footer-app-links > a { background: #07100c; }
+:root[data-theme='dark'] .contact-grid label > span { color: #a5b2ab; }
+:root[data-theme='dark'] .contact-grid input,
+:root[data-theme='dark'] .contact-grid select,
+:root[data-theme='dark'] .contact-grid textarea,
+:root[data-theme='dark'] .contact-close { color: var(--ink); background: #101a16; }
+:root[data-theme='dark'] .contact-note { color: #abe1c2; background: #173324; }
+:root[data-theme='dark'] .contact-error { color: #f6a88d; background: #3a2018; }
+:root[data-theme='dark'] .contact-submit { color: #07130d; }
 
 @media (max-width: 1060px) {
   .app-shell { padding: 0 28px 34px; }
@@ -409,6 +472,16 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .topbar { height: auto; min-height: 82px; gap: 14px; padding: 12px 0; }
   .privacy-pill { display: none; }
   .language-toggle svg { display: none; }
+  .contact-toggle span { display: none; }
+  .contact-toggle { width: 34px; padding: 7px; }
+  .contact-modal { padding: 12px; }
+  .contact-dialog { max-height: calc(100vh - 24px); padding: 21px 17px; }
+  .contact-grid { grid-template-columns: 1fr; }
+  .contact-message { grid-column: auto; }
+  .contact-actions { align-items: stretch; flex-direction: column; }
+  .contact-actions > span { margin-right: 0; }
+  .contact-actions > a { justify-content: center; }
+  .contact-submit { width: 100%; }
   .site-footer { grid-template-columns: 1fr; }
   .footer-meta > p { max-width: 100%; padding-right: 0; }
   .version-pill { position: static; margin-top: 10px; }

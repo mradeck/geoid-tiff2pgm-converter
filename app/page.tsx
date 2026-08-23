@@ -17,19 +17,22 @@ import {
   Info,
   Languages,
   Layers3,
+  LifeBuoy,
   LoaderCircle,
+  Mail,
   MapPinned,
   Moon,
   RefreshCw,
   Ruler,
   ShieldCheck,
+  Send,
   SlidersHorizontal,
   Sparkles,
   Sun,
   Upload,
   X,
 } from 'lucide-react';
-import { DragEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { DragEvent, FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import {
   analyzeGeoTiff,
   createPgm,
@@ -84,7 +87,18 @@ const COPY = {
     gpsDescription: 'GPS-Koordinaten direkt in ETRS89 / UTM, Gauß-Krüger und DHHN2016 umrechnen.',
     geodataDescription: 'Räumliche Ausreißer in DXF- und GeoJSON-Dateien lokal untersuchen und bereinigen.',
     legalSupport: 'Rechtliches & Support',
-    imprint: 'Impressum', support: 'Ko-fi',
+    imprint: 'Impressum', support: 'Ko-fi', helpContact: 'Hilfe & Kontakt',
+    contactTitle: 'Wie können wir helfen?',
+    contactIntro: 'Frage stellen, Fehler melden oder direkt Kontakt aufnehmen. Deine Nachricht landet bei Michael Radeck.',
+    category: 'Anliegen', categoryHelp: 'Hilfe / Frage', categoryBug: 'Bugreport', categoryContact: 'Kontakt',
+    name: 'Name', email: 'E-Mail', topic: 'Betreff', message: 'Nachricht', requiredHint: 'Alle Felder sind erforderlich.',
+    namePlaceholder: 'Dein Name', emailPlaceholder: 'name@beispiel.de', topicPlaceholder: 'Kurze Zusammenfassung',
+    messagePlaceholder: 'Was ist passiert oder wobei brauchst du Hilfe?',
+    contactPrivacy: 'Die Angaben werden sicher über Netlify Forms an michael.radeck@email.de übermittelt. Bitte keine vertraulichen Geodaten mitsenden.',
+    sendMessage: 'Nachricht senden', sendingMessage: 'Wird gesendet …', close: 'Schließen',
+    contactSuccessTitle: 'Nachricht ist unterwegs.', contactSuccessText: 'Danke! Die Anfrage wurde übermittelt und kann per E-Mail beantwortet werden.',
+    contactError: 'Die Nachricht konnte gerade nicht übermittelt werden. Bitte versuche es erneut oder schreibe direkt per E-Mail.',
+    directEmail: 'Direkt per E-Mail',
     privacyFooter: 'Rohdaten werden nicht hochgeladen. Kartenkacheln werden von OpenStreetMap geladen.',
     copyright: '© 2026 Michael Radeck. Alle Rechte vorbehalten.', version: 'Version',
     pgmEmpty: 'Nach der Analyse erscheint hier der PGM-Dateikopf.', binaryData: '… Binärdaten …',
@@ -126,7 +140,18 @@ const COPY = {
     gpsDescription: 'Convert GPS coordinates directly to ETRS89 / UTM, Gauss-Krüger and DHHN2016.',
     geodataDescription: 'Inspect and clean spatial outliers in DXF and GeoJSON files locally.',
     legalSupport: 'Legal & support',
-    imprint: 'Legal notice', support: 'Ko-fi',
+    imprint: 'Legal notice', support: 'Ko-fi', helpContact: 'Help & contact',
+    contactTitle: 'How can we help?',
+    contactIntro: 'Ask a question, report a bug or get in touch directly. Your message goes to Michael Radeck.',
+    category: 'Request type', categoryHelp: 'Help / question', categoryBug: 'Bug report', categoryContact: 'Contact',
+    name: 'Name', email: 'Email', topic: 'Subject', message: 'Message', requiredHint: 'All fields are required.',
+    namePlaceholder: 'Your name', emailPlaceholder: 'name@example.com', topicPlaceholder: 'Short summary',
+    messagePlaceholder: 'What happened, or what do you need help with?',
+    contactPrivacy: 'Your details are securely sent through Netlify Forms to michael.radeck@email.de. Please do not include confidential geodata.',
+    sendMessage: 'Send message', sendingMessage: 'Sending …', close: 'Close',
+    contactSuccessTitle: 'Your message is on its way.', contactSuccessText: 'Thank you! Your request was submitted and can be answered by email.',
+    contactError: 'Your message could not be sent right now. Please try again or send an email directly.',
+    directEmail: 'Email directly',
     privacyFooter: 'Raw data is never uploaded. Map tiles are loaded from OpenStreetMap.',
     copyright: '© 2026 Michael Radeck. All rights reserved.', version: 'Version',
     pgmEmpty: 'The PGM file header will appear here after analysis.', binaryData: '… Binary data …',
@@ -235,6 +260,8 @@ function MetadataRows({ rows }: { rows: Array<[string, string]> }) {
 
 export default function Home() {
   const inputRef = useRef<HTMLInputElement>(null);
+  const contactFormRef = useRef<HTMLFormElement>(null);
+  const contactFirstRef = useRef<HTMLSelectElement>(null);
   const [phase, setPhase] = useState<Phase>('idle');
   const [analysis, setAnalysis] = useState<RasterAnalysis | null>(null);
   const [error, setError] = useState('');
@@ -249,6 +276,10 @@ export default function Home() {
   const [language, setLanguage] = useState<Language>('de');
   const [theme, setTheme] = useState<Theme>('light');
   const [preferencesReady, setPreferencesReady] = useState(false);
+  const [contactOpen, setContactOpen] = useState(false);
+  const [contactStatus, setContactStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+  const [contactCategory, setContactCategory] = useState('help');
+  const [contactTopic, setContactTopic] = useState('');
   const copy = COPY[language];
   const t = (key: CopyKey) => copy[key];
 
@@ -278,6 +309,22 @@ export default function Home() {
     window.localStorage.setItem('geoid-forge-language', language);
     window.localStorage.setItem('geoid-forge-theme', theme);
   }, [language, preferencesReady, theme]);
+
+  useEffect(() => {
+    if (!contactOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const focusTimer = window.setTimeout(() => contactFirstRef.current?.focus(), 60);
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setContactOpen(false);
+    };
+    window.addEventListener('keydown', closeOnEscape);
+    return () => {
+      window.clearTimeout(focusTimer);
+      window.removeEventListener('keydown', closeOnEscape);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [contactOpen]);
 
   const numericOffset = Number(offset);
   const numericScale = Number(scale);
@@ -376,6 +423,41 @@ export default function Home() {
     setPgmResult(null);
   };
 
+  const openContact = () => {
+    setContactStatus('idle');
+    setContactOpen(true);
+  };
+
+  const closeContact = () => setContactOpen(false);
+
+  const submitContact = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setContactStatus('sending');
+    const formData = new FormData(event.currentTarget);
+    formData.set('form-name', 'geoid-forge-contact');
+    formData.set('version', APP_VERSION_CODE);
+    formData.set('page', 'https://geoid-forge.netlify.app/');
+    const body = new URLSearchParams();
+    formData.forEach((value, key) => {
+      if (typeof value === 'string') body.append(key, value);
+    });
+
+    try {
+      const response = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: body.toString(),
+      });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      contactFormRef.current?.reset();
+      setContactCategory('help');
+      setContactTopic('');
+      setContactStatus('success');
+    } catch {
+      setContactStatus('error');
+    }
+  };
+
   const compressionLabel = analysis?.compressionLabel === 'Unkomprimiert' && language === 'en' ? copy.uncompressed : analysis?.compressionLabel;
   const crsName = analysis?.crsName === 'Nicht ausgewiesen' && language === 'en' ? 'Not specified' : analysis?.crsName;
 
@@ -389,6 +471,9 @@ export default function Home() {
         <div className="topbar-actions">
           <a className="method-link" href="#methodik">{t('method')}</a>
           <div className="privacy-pill"><ShieldCheck size={14} /> {t('local')}</div>
+          <button className="utility-toggle contact-toggle" type="button" onClick={openContact}>
+            <LifeBuoy size={15} /><span>{t('helpContact')}</span>
+          </button>
           <button className="utility-toggle theme-toggle" type="button"
             aria-label={theme === 'dark' ? t('lightMode') : t('darkMode')}
             title={theme === 'dark' ? t('lightMode') : t('darkMode')}
@@ -552,10 +637,75 @@ export default function Home() {
           </div>
         </div>
         <div className="footer-meta"><p className="panel-label">{t('legalSupport')}</p><nav aria-label={t('legalSupport')}>
+          <button type="button" onClick={openContact}><LifeBuoy size={13} /> {t('helpContact')}</button>
           <a href="https://www.multikopterschule.de/Kontakt-Impressum/IMPRESSUM/" target="_blank" rel="noreferrer"><FileText size={13} /> {t('imprint')}</a>
           <a href="https://ko-fi.com/mradeck/tip" target="_blank" rel="noreferrer"><Coffee size={13} /> {t('support')}</a>
         </nav><p>{t('privacyFooter')}</p><p>{t('copyright')}</p><span className="version-pill">{t('version')} {APP_VERSION_CODE}</span></div>
       </footer>
+
+      <form name="geoid-forge-contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
+        <input type="hidden" name="form-name" value="geoid-forge-contact" readOnly />
+        <input name="bot-field" />
+        <input name="subject" />
+        <input name="category" />
+        <input name="topic" />
+        <input name="name" />
+        <input name="email" type="email" />
+        <textarea name="message" />
+        <input name="version" />
+        <input name="page" />
+      </form>
+
+      <div className={`contact-modal ${contactOpen ? 'is-open' : ''}`} aria-hidden={!contactOpen}
+        onMouseDown={(event) => { if (event.target === event.currentTarget) closeContact(); }}>
+        <section className="contact-dialog" role="dialog" aria-modal="true" aria-labelledby="contact-title">
+          <button className="contact-close" type="button" onClick={closeContact} aria-label={t('close')}><X size={18} /></button>
+          {contactStatus === 'success' ? (
+            <div className="contact-success" role="status">
+              <span><CheckCircle2 size={25} /></span>
+              <p className="panel-label">Geoid Forge · {APP_VERSION_CODE}</p>
+              <h2 id="contact-title">{t('contactSuccessTitle')}</h2>
+              <p>{t('contactSuccessText')}</p>
+              <button className="contact-submit" type="button" onClick={closeContact}>{t('close')}</button>
+            </div>
+          ) : (
+            <>
+              <div className="contact-heading">
+                <span><Mail size={21} /></span>
+                <div><p className="panel-label">Geoid Forge · {APP_VERSION_CODE}</p><h2 id="contact-title">{t('contactTitle')}</h2></div>
+              </div>
+              <p className="contact-intro">{t('contactIntro')}</p>
+              <form ref={contactFormRef} name="geoid-forge-contact" method="POST" onSubmit={(event) => void submitContact(event)}>
+                <input type="hidden" name="form-name" value="geoid-forge-contact" />
+                <input type="hidden" name="subject" data-remove-prefix="true"
+                  value={`Geoid Forge ${APP_VERSION_CODE} — ${contactCategory}: ${contactTopic || copy.helpContact}`} />
+                <input type="hidden" name="version" value={APP_VERSION_CODE} />
+                <input type="hidden" name="page" value="https://geoid-forge.netlify.app/" />
+                <p className="honeypot"><label>Leave this field empty <input name="bot-field" /></label></p>
+                <div className="contact-grid">
+                  <label><span>{t('category')}</span><select ref={contactFirstRef} name="category" required value={contactCategory}
+                    onChange={(event) => setContactCategory(event.target.value)}>
+                    <option value="help">{t('categoryHelp')}</option><option value="bug">{t('categoryBug')}</option>
+                    <option value="contact">{t('categoryContact')}</option></select></label>
+                  <label><span>{t('name')}</span><input name="name" autoComplete="name" placeholder={t('namePlaceholder')} required /></label>
+                  <label><span>{t('email')}</span><input name="email" type="email" autoComplete="email" placeholder={t('emailPlaceholder')} required /></label>
+                  <label><span>{t('topic')}</span><input name="topic" placeholder={t('topicPlaceholder')} required value={contactTopic}
+                    onChange={(event) => setContactTopic(event.target.value)} /></label>
+                  <label className="contact-message"><span>{t('message')}</span><textarea name="message" rows={6}
+                    placeholder={t('messagePlaceholder')} required /></label>
+                </div>
+                <div className="contact-note"><ShieldCheck size={15} /><span>{t('contactPrivacy')}</span></div>
+                {contactStatus === 'error' && <div className="contact-error" role="alert"><AlertTriangle size={16} /><span>{t('contactError')}</span></div>}
+                <div className="contact-actions"><span>{t('requiredHint')}</span><a href="mailto:michael.radeck@email.de"><Mail size={13} /> {t('directEmail')}</a>
+                  <button className="contact-submit" type="submit" disabled={contactStatus === 'sending'}>
+                    {contactStatus === 'sending' ? <LoaderCircle className="spin" size={16} /> : <Send size={16} />}
+                    {contactStatus === 'sending' ? t('sendingMessage') : t('sendMessage')}
+                  </button></div>
+              </form>
+            </>
+          )}
+        </section>
+      </div>
     </main>
   );
 }

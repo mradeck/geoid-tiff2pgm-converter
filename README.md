@@ -1,6 +1,6 @@
 # Geoid Forge
 
-Aktuelle App-Version: **v26.08.2.0**
+Aktuelle App-Version: **v26.08.3.0**
 
 ![Geoid Forge](public/og.png)
 
@@ -18,6 +18,7 @@ Eine browserbasierte Single-Page-App zum Analysieren von GeoTIFF-Geoidmodellen u
 - Umschaltbares helles/dunkles Interface und vollständige deutsche/englische Oberfläche
 - App-Verweise auf PointCloud Manager, GPS2UTM und Geodata Inspector & Cleaner
 - Verweise auf Impressum und Ko-fi
+- Hilfe-, Bugreport- und Kontaktformular über Netlify Forms
 - Vollständig statischer Netlify-Build
 
 ## Versionierung
