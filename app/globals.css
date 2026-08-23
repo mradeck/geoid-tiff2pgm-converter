@@ -269,16 +269,19 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .source-links a:hover span { text-decoration: underline; }
 
 .site-footer {
-  margin-top: 18px; min-height: 190px; display: grid; grid-template-columns: minmax(290px, .8fr) minmax(360px, 1.2fr);
+  margin-top: 18px; min-height: 190px; display: grid; grid-template-columns: 1fr;
   align-items: stretch; gap: 12px; padding: 0 0 4px; color: #747e79;
 }
 .footer-app-card, .footer-meta { border: 1px solid var(--line); border-radius: 14px; background: var(--card); padding: 18px; }
 .footer-app-card > .panel-label, .footer-meta > .panel-label { margin-bottom: 10px; }
-.footer-app-card > a {
-  min-height: 96px; display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 17px;
+.footer-app-links { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; }
+.footer-app-links > a {
+  min-height: 112px; display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 17px;
   border-radius: 11px; color: var(--ink); background: var(--ink); text-decoration: none;
+  transition: transform .15s ease, box-shadow .15s ease;
 }
-.footer-app-card > a > svg { flex: 0 0 auto; color: var(--chartreuse); }
+.footer-app-links > a:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(23,36,32,.15); }
+.footer-app-links > a > svg { flex: 0 0 auto; color: var(--chartreuse); }
 .footer-app-card strong, .footer-app-card small { display: block; }
 .footer-app-card strong { color: white; font-size: 16px; letter-spacing: -.03em; }
 .footer-app-card small { max-width: 470px; margin-top: 6px; color: #afc0b7; font-size: 9px; line-height: 1.5; }
@@ -354,7 +357,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 :root[data-theme='dark'] .source-links a { border-color: #365044; }
 :root[data-theme='dark'] .compatibility-note { border-color: #5e4823; color: #f2c47d; }
 :root[data-theme='dark'] .compatibility-note p { color: #d6b77f; }
-:root[data-theme='dark'] .footer-app-card > a { background: #07100c; }
+:root[data-theme='dark'] .footer-app-links > a { background: #07100c; }
 
 @media (max-width: 1060px) {
   .app-shell { padding: 0 28px 34px; }
@@ -377,6 +380,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .metadata-grid { grid-template-columns: 1fr 1fr; }
   .dark-card { grid-column: span 2; }
   .method-section { grid-template-columns: 1fr; }
+  .footer-app-links { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 620px) {

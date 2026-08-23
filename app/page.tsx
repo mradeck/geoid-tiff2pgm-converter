@@ -79,8 +79,11 @@ const COPY = {
     technicalBasis: 'Technische Basis', standardsTitle: 'Auf Standards gebaut, nicht auf Dateitricks.',
     standardsText: 'Die Konvertierung folgt dem binären P5-Format. Höhen werden linear als',
     standardsEnd: 'codiert; 16-Bit-Werte werden Big-Endian geschrieben.', pgmSpec: 'PGM-Spezifikation',
-    geographicLib: 'GeographicLib Geoid-Format', sourceCode: 'Quellcode', otherApp: 'Weitere App',
-    pointCloudDescription: 'Punktwolken verwalten, prüfen und für weitere Workflows vorbereiten.', legalSupport: 'Rechtliches & Support',
+    geographicLib: 'GeographicLib Geoid-Format', sourceCode: 'Quellcode', otherApp: 'Weitere Apps',
+    pointCloudDescription: 'Punktwolken verwalten, prüfen und für weitere Workflows vorbereiten.',
+    gpsDescription: 'GPS-Koordinaten direkt in ETRS89 / UTM, Gauß-Krüger und DHHN2016 umrechnen.',
+    geodataDescription: 'Räumliche Ausreißer in DXF- und GeoJSON-Dateien lokal untersuchen und bereinigen.',
+    legalSupport: 'Rechtliches & Support',
     imprint: 'Impressum', support: 'Ko-fi',
     privacyFooter: 'Rohdaten werden nicht hochgeladen. Kartenkacheln werden von OpenStreetMap geladen.',
     copyright: '© 2026 Michael Radeck. Alle Rechte vorbehalten.', version: 'Version',
@@ -118,8 +121,11 @@ const COPY = {
     technicalBasis: 'Technical foundation', standardsTitle: 'Built on standards, not file tricks.',
     standardsText: 'The conversion follows the binary P5 format. Elevations are encoded linearly as',
     standardsEnd: '; 16-bit values are written in big-endian order.', pgmSpec: 'PGM specification',
-    geographicLib: 'GeographicLib geoid format', sourceCode: 'source code', otherApp: 'Another app',
-    pointCloudDescription: 'Manage, inspect and prepare point clouds for downstream workflows.', legalSupport: 'Legal & support',
+    geographicLib: 'GeographicLib geoid format', sourceCode: 'source code', otherApp: 'More apps',
+    pointCloudDescription: 'Manage, inspect and prepare point clouds for downstream workflows.',
+    gpsDescription: 'Convert GPS coordinates directly to ETRS89 / UTM, Gauss-Krüger and DHHN2016.',
+    geodataDescription: 'Inspect and clean spatial outliers in DXF and GeoJSON files locally.',
+    legalSupport: 'Legal & support',
     imprint: 'Legal notice', support: 'Ko-fi',
     privacyFooter: 'Raw data is never uploaded. Map tiles are loaded from OpenStreetMap.',
     copyright: '© 2026 Michael Radeck. All rights reserved.', version: 'Version',
@@ -536,8 +542,15 @@ export default function Home() {
 
       <footer className="site-footer">
         <div className="footer-app-card"><p className="panel-label">{t('otherApp')}</p>
-          <a href="https://www.pointcloud-manager.com" target="_blank" rel="noreferrer"><span><strong>PointCloud Manager</strong>
-            <small>{t('pointCloudDescription')}</small></span><ExternalLink size={16} /></a></div>
+          <div className="footer-app-links">
+            <a href="https://www.pointcloud-manager.com" target="_blank" rel="noreferrer"><span><strong>PointCloud Manager</strong>
+              <small>{t('pointCloudDescription')}</small></span><ExternalLink size={16} /></a>
+            <a href="https://mradeck.github.io/gps-utm-coordinate-converter/" target="_blank" rel="noreferrer"><span><strong>GPS2UTM</strong>
+              <small>{t('gpsDescription')}</small></span><ExternalLink size={16} /></a>
+            <a href="https://geodata-inspector-cleaner.netlify.app/" target="_blank" rel="noreferrer"><span><strong>Geodata Inspector &amp; Cleaner</strong>
+              <small>{t('geodataDescription')}</small></span><ExternalLink size={16} /></a>
+          </div>
+        </div>
         <div className="footer-meta"><p className="panel-label">{t('legalSupport')}</p><nav aria-label={t('legalSupport')}>
           <a href="https://www.multikopterschule.de/Kontakt-Impressum/IMPRESSUM/" target="_blank" rel="noreferrer"><FileText size={13} /> {t('imprint')}</a>
           <a href="https://ko-fi.com/mradeck/tip" target="_blank" rel="noreferrer"><Coffee size={13} /> {t('support')}</a>

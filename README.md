@@ -1,6 +1,6 @@
 # Geoid Forge
 
-Aktuelle App-Version: **v26.08.1.0**
+Aktuelle App-Version: **v26.08.2.0**
 
 ![Geoid Forge](public/og.png)
 
@@ -16,7 +16,8 @@ Eine browserbasierte Single-Page-App zum Analysieren von GeoTIFF-Geoidmodellen u
 - RayStudio-Preset mit `Offset -108` und `Scale 0.003`
 - NoData-Füllung über den nächsten gültigen Rasterwert oder den Median
 - Umschaltbares helles/dunkles Interface und vollständige deutsche/englische Oberfläche
-- Verweise auf PointCloud Manager, Impressum und Ko-fi
+- App-Verweise auf PointCloud Manager, GPS2UTM und Geodata Inspector & Cleaner
+- Verweise auf Impressum und Ko-fi
 - Vollständig statischer Netlify-Build
 
 ## Versionierung
