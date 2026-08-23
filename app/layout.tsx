@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.SITE_URL ?? 'https://geoid-forge.workspace-vo-5150.chatgpt.site'),
+  metadataBase: new URL(process.env.URL ?? process.env.SITE_URL ?? 'https://geoid-forge.workspace-vo-5150.chatgpt.site'),
   title: 'Geoid Forge — GeoTIFF zu PGM',
   description: 'GeoTIFF-Geoidmodelle lokal analysieren, kartieren und als 16-Bit-PGM exportieren.',
   openGraph: {
