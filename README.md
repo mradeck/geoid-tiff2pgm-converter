@@ -1,5 +1,7 @@
 # Geoid Forge
 
+Aktuelle App-Version: **v26.08.1.0**
+
 ![Geoid Forge](public/og.png)
 
 Eine browserbasierte Single-Page-App zum Analysieren von GeoTIFF-Geoidmodellen und zum Exportieren als binäres 16-Bit-PGM. Die Quelldatei bleibt im Browser und wird nicht auf einen Server hochgeladen.
@@ -13,7 +15,13 @@ Eine browserbasierte Single-Page-App zum Analysieren von GeoTIFF-Geoidmodellen u
 - Binärer P5-Export mit Big-Endian-16-Bit-Werten
 - RayStudio-Preset mit `Offset -108` und `Scale 0.003`
 - NoData-Füllung über den nächsten gültigen Rasterwert oder den Median
+- Umschaltbares helles/dunkles Interface und vollständige deutsche/englische Oberfläche
+- Verweise auf PointCloud Manager, Impressum und Ko-fi
 - Vollständig statischer Netlify-Build
+
+## Versionierung
+
+Geoid Forge folgt wie SkyCheck und PointCloud Manager dem Schema `vYY.MM.major.subversion`. Ein neuer Funktionsstand erhöht `major` und setzt `subversion` auf `0`; reine Fixes erhöhen die letzte Stelle. Die vollständige Versionsnummer steht zentral in `app/lib/version.ts` und wird im Browser-Titel sowie im Footer angezeigt.
 
 ## Lokal starten
 

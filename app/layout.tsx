@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.URL ?? process.env.SITE_URL ?? 'https://geoid-forge.workspace-vo-5150.chatgpt.site'),
+  metadataBase: new URL(process.env.URL ?? process.env.SITE_URL ?? 'https://geoid-forge.netlify.app'),
   title: 'Geoid Forge — GeoTIFF zu PGM',
   description: 'GeoTIFF-Geoidmodelle lokal analysieren, kartieren und als 16-Bit-PGM exportieren.',
   openGraph: {
@@ -31,7 +31,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="de">
+    <html lang="de" suppressHydrationWarning>
+      <head>
+        <meta name="theme-color" content="#f4f3ed" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('geoid-forge-theme');if(t!=='dark'&&t!=='light')t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';var l=localStorage.getItem('geoid-forge-language');if(l!=='de'&&l!=='en')l=(navigator.language||'de').toLowerCase().indexOf('de')===0?'de':'en';document.documentElement.dataset.theme=t;document.documentElement.lang=l;}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>{children}</body>
     </html>
   );

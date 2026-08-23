@@ -1,6 +1,6 @@
 {
   "name": "geoid-forge",
-  "version": "0.1.0",
+  "version": "26.8.1",
   "private": true,
   "engines": {
     "node": ">=22.13.0"
@@ -10,7 +10,7 @@
     "build": "vinext build",
     "build:netlify": "next build",
     "start": "vinext start",
-    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next"
+    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern .netlify --ignore-pattern out"
   },
   "dependencies": {
     "d3-contour": "^4.0.2",
