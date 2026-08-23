@@ -1,6 +1,6 @@
 # Geoid Forge
 
-Aktuelle App-Version: **v26.08.4.0**
+Aktuelle App-Version: **v26.08.5.0**
 
 ![Geoid Forge](public/og.png)
 

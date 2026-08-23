@@ -51,7 +51,7 @@ const COPY = {
   de: {
     home: 'Geoid Forge Startseite', method: 'Methodik', local: 'Datei bleibt lokal',
     darkMode: 'Dunkles Interface aktivieren', lightMode: 'Helles Interface aktivieren', language: 'Sprache wechseln',
-    eyebrow: 'Geoid-Konverter & Metadaten-Analyse', title: 'Vom GeoTIFF zum einsatzbereiten Höhenmodell.',
+    eyebrow: 'Geoid-Konverter & Metadaten-Analyse', title: 'Geoidraster analysieren und als PGM exportieren',
     lede: 'Prüfe Raster, Koordinatenbezug und Abdeckung. Exportiere anschließend ein binäres 16-Bit-PGM für deinen RayStudio-Workflow.',
     workspace: 'Konverter-Arbeitsbereich', source: 'Quelldatei', load: 'GeoTIFF laden', analyzed: 'analysiert',
     reading: 'Raster wird gelesen', readingText: 'Metadaten, Wertebereich und Footprint werden ermittelt …',
@@ -136,7 +136,7 @@ const COPY = {
   en: {
     home: 'Geoid Forge home', method: 'Method', local: 'File stays local', darkMode: 'Enable dark interface',
     lightMode: 'Enable light interface', language: 'Switch language', eyebrow: 'Geoid converter & metadata analysis',
-    title: 'From GeoTIFF to a ready-to-use elevation model.',
+    title: 'Analyze geoid grids and export them as PGM',
     lede: 'Inspect raster data, spatial reference and coverage, then export a binary 16-bit PGM for your RayStudio workflow.',
     workspace: 'Converter workspace', source: 'Source file', load: 'Load GeoTIFF', analyzed: 'analyzed',
     reading: 'Reading raster', readingText: 'Inspecting metadata, value range and footprint …', drop: 'Drop GeoTIFF here',

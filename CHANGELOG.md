@@ -1,5 +1,10 @@
 # Changelog
 
+## v26.08.5.0 — 2026-08-23
+
+- Haupttitel fachlich präzise auf Geoidraster und PGM-Export ausgerichtet
+- Deutsche und englische Titelvariante sprachlich angeglichen
+
 ## v26.08.4.0 — 2026-08-23
 
 - Anklickbare und tastaturbedienbare „i“-Hilfen für Offset, Skalierung, Automatik, Wertebereich, Karte und Metadaten ergänzt
