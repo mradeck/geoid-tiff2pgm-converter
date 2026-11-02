@@ -1,31 +1,29 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import '@fontsource-variable/inter';
 import './globals.css';
-import { APP_VERSION_CODE } from './lib/version';
+import { APP_NAME, APP_ORIGIN, APP_VERSION_CODE } from './lib/version';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
+const TITLE = `${APP_NAME} — Geoid-GeoTIFF zu PGM`;
+const DESCRIPTION = 'Geoid-GeoTIFF-Modelle lokal analysieren, kartieren und als 16-Bit-PGM exportieren.';
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.URL ?? process.env.SITE_URL ?? 'https://geoid-forge.netlify.app'),
-  title: `Geoid Forge — GeoTIFF zu PGM · ${APP_VERSION_CODE}`,
-  description: 'GeoTIFF-Geoidmodelle lokal analysieren, kartieren und als 16-Bit-PGM exportieren.',
+  metadataBase: new URL(APP_ORIGIN),
+  title: `${TITLE} · ${APP_VERSION_CODE}`,
+  description: DESCRIPTION,
+  applicationName: APP_NAME,
+  alternates: { canonical: '/' },
   openGraph: {
-    title: 'Geoid Forge — GeoTIFF zu PGM',
-    description: 'GeoTIFF-Geoidmodelle lokal analysieren, kartieren und als 16-Bit-PGM exportieren.',
-    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'Geoid Forge — GeoTIFF zu PGM' }],
+    type: 'website',
+    url: '/',
+    siteName: APP_NAME,
+    title: TITLE,
+    description: DESCRIPTION,
+    images: [{ url: '/og.png', width: 1200, height: 630, alt: TITLE }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Geoid Forge — GeoTIFF zu PGM',
-    description: 'GeoTIFF-Geoidmodelle lokal analysieren, kartieren und als 16-Bit-PGM exportieren.',
+    title: TITLE,
+    description: DESCRIPTION,
     images: ['/og.png'],
   },
 };
@@ -37,11 +35,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <meta name="theme-color" content="#f3f5f8" />
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var d=document.documentElement,m=localStorage.getItem('geoid-forge-theme');if(m!=='light'&&m!=='dark')m='auto';var t=m==='auto'?(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):m;d.dataset.theme=t;d.dataset.themeMode=m;var c=document.querySelector('meta[name="theme-color"]');if(c)c.setAttribute('content',t==='dark'?'#14171c':'#f3f5f8');var l=localStorage.getItem('geoid-forge-language');if(l!=='de'&&l!=='en')l=(navigator.language||'de').toLowerCase().indexOf('de')===0?'de':'en';d.lang=l;}catch(e){}})();`,
+            __html: `(function(){try{var d=document.documentElement,m=localStorage.getItem('geoid-tiff2pgm-theme');if(m!=='light'&&m!=='dark')m='auto';var t=m==='auto'?(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):m;d.dataset.theme=t;d.dataset.themeMode=m;var c=document.querySelector('meta[name="theme-color"]');if(c)c.setAttribute('content',t==='dark'?'#14171c':'#f3f5f8');var l=localStorage.getItem('geoid-tiff2pgm-language');if(l!=='de'&&l!=='en')l=(navigator.language||'de').toLowerCase().indexOf('de')===0?'de':'en';d.lang=l;}catch(e){}})();`,
           }}
         />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>{children}</body>
+      <body>{children}</body>
     </html>
   );
 }

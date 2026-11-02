@@ -15,7 +15,6 @@ import {
   FileText,
   Info,
   Layers3,
-  LifeBuoy,
   LoaderCircle,
   Mail,
   MapPinned,
@@ -36,7 +35,7 @@ import {
   type PgmResult,
   type RasterAnalysis,
 } from './lib/geoid';
-import { APP_VERSION_CODE } from './lib/version';
+import { APP_NAME, APP_ORIGIN, APP_VERSION_CODE } from './lib/version';
 
 type Phase = 'idle' | 'reading' | 'ready' | 'error';
 type MetadataTab = 'overview' | 'geokeys' | 'pgm';
@@ -46,7 +45,18 @@ type ResolvedTheme = 'light' | 'dark';
 
 const COPY = {
   de: {
-    home: 'Geoid Forge Startseite', method: 'Methodik', local: 'Datei bleibt lokal',
+    home: 'Geoid-TIFF 2 PGM Converter Startseite', method: 'Methodik', local: 'GeoTIFF lokal · OSM-Karte online', actionsAria: 'Projektaktionen',
+    aboutMenu: 'Über', aboutMe: 'Über mich', copyright: 'Copyright', help: 'Hilfe', helpAria: 'Hilfe, Bugreport und Kontakt öffnen',
+    aboutEyebrow: 'Über den Entwickler', aboutTitle: 'Über Michael Radeck',
+    aboutSubtitle: 'DroneMediaMunich, Multikopterschule XMS, Pointcloud Manager und Geoid-TIFF 2 PGM Converter.',
+    aboutP1: 'Michael Radeck arbeitet seit vielen Jahren an der Schnittstelle von Medienproduktion, Drohnentechnik, Vermessung und Ausbildung. Als Inhaber von DroneMediaMunich, eXpert Media Solutions und der Multikopterschule XMS verbindet er praktische Flugerfahrung mit Postproduktion, Colorgrading, Photogrammetrie, GNSS-/Vermessungsworkflows und technischer Schulung.',
+    aboutP2: 'Mit DroneMediaMunich realisiert er Luftaufnahmen, Drohnenvideos, Inspektions- und Vermessungsflüge sowie photogrammetrische Auswertungen bis hin zu 3D-Modellen und CAD-nahen Aufmaßen. Die Multikopterschule XMS bietet Schulungen und Fachkunde für private und gewerbliche Drohnenpiloten, unter anderem zu Luftrecht, sicherem Flugbetrieb, Praxisnachweisen, BOS-Anwendungen, Photogrammetrie und professionellen Film-/TV-Einsätzen.',
+    aboutP3: 'Der Pointcloud Manager entsteht aus diesem praktischen Arbeitsumfeld: als lokales Werkzeug für Punktwolken, Drohnenvermessung, Photogrammetrie, LiDAR-Daten, Shape-Analyse und dokumentierbare Auswertungen, ohne Cloud-Zwang und mit Fokus auf nachvollziehbare Workflows.',
+    aboutDemoIntro: 'Eine reduzierte Online-Version mit Funktionslimits und Upgrade-/Upsell-Hinweisen ist hier verfügbar:',
+    aboutDemoLink: 'Pointcloud Manager – reduzierte Online-Version',
+    aboutP4: 'Der Geoid-TIFF 2 PGM Converter überträgt diesen Ansatz auf Geoidmodelle: Raster, Raumbezug und Abdeckung werden lokal im Browser geprüft, und der PGM-Export bleibt mit Offset, Skalierung und Prüfbericht nachvollziehbar.',
+    aboutXing: 'XING-Profil', aboutLinksAria: 'Profile und Projekte', aboutCloseAria: 'Über-mich-Fenster schließen', ok: 'OK',
+    licEyebrow: 'Projektinformationen', licCloseAria: 'Copyright-Fenster schließen',
     themeAuto: 'Interface: automatisch (Systemeinstellung) — klicken für hell',
     themeLight: 'Interface: hell — klicken für dunkel',
     themeDark: 'Interface: dunkel — klicken für automatisch',
@@ -117,11 +127,11 @@ const COPY = {
     footerSupport: 'Hilfe / Bugreport / Kontakt', footerLicenses: 'Lizenzen / Copyright', footerSource: 'Quellcode',
     kofiAria: 'Michael Radeck auf Ko-fi unterstützen',
     imprint: 'Impressum', helpContact: 'Hilfe & Kontakt',
-    licIntro: 'Geoid Forge: © 2026 Michael Radeck. Alle Rechte vorbehalten. Verwendete Bibliotheken, Schriften und externe Dienste:',
+    licIntro: 'Geoid-TIFF 2 PGM Converter: © 2026 Michael Radeck. Alle Rechte vorbehalten. Verwendete Bibliotheken, Schriften und externe Dienste:',
     licComponent: 'Komponente', licLicense: 'Lizenz', licUse: 'Verwendung', licAppUse: 'diese App',
     licGeotiff: 'GeoTIFF lesen', licGeokeys: 'GeoKeys in Proj4-Definitionen übersetzen', licProj4: 'Koordinaten umrechnen',
     licLeaflet: 'Kartenanzeige', licContour: 'Footprint-Kontur', licLucide: 'Symbole', licReact: 'Oberfläche',
-    licNext: 'Framework und statischer Export', licGeist: 'Schrift', licOsmHolder: '© OpenStreetMap-Mitwirkende',
+    licNext: 'Framework und statischer Export', licFont: 'Schrift (selbst gehostet)', licOsmHolder: '© OpenStreetMap-Mitwirkende',
     licOsm: 'Grundkarte (online geladen)',
     licPrivacy: 'Rohdaten werden nicht hochgeladen. Kartenkacheln werden von OpenStreetMap geladen.',
     mailSubjectHelp: 'Hilfe / Frage', mailSubjectBug: 'Bugreport', mailSubjectContact: 'Kontakt',
@@ -139,7 +149,18 @@ const COPY = {
     pgmEmpty: 'Nach der Analyse erscheint hier der PGM-Dateikopf.', binaryData: '… Binärdaten …',
   },
   en: {
-    home: 'Geoid Forge home', method: 'Method', local: 'File stays local',
+    home: 'Geoid-TIFF 2 PGM Converter home', method: 'Method', local: 'GeoTIFF local · OSM map online', actionsAria: 'Project actions',
+    aboutMenu: 'About', aboutMe: 'About me', copyright: 'Copyright', help: 'Help', helpAria: 'Open help, bug report and contact',
+    aboutEyebrow: 'About the developer', aboutTitle: 'About Michael Radeck',
+    aboutSubtitle: 'DroneMediaMunich, Multikopterschule XMS, Pointcloud Manager and Geoid-TIFF 2 PGM Converter.',
+    aboutP1: 'Michael Radeck has been working at the intersection of media production, drone technology, surveying and training for many years. As the owner of DroneMediaMunich, eXpert Media Solutions and the Multikopterschule XMS, he combines practical flight experience with post-production, colour grading, photogrammetry, GNSS/survey workflows and technical training.',
+    aboutP2: 'With DroneMediaMunich he carries out aerial photography, drone videos, inspection and survey flights as well as photogrammetric processing up to 3D models and CAD-quality dimensioning. The Multikopterschule XMS offers training and proficiency for private and commercial drone pilots — among other topics aviation law, safe flight operations, practical proof of competence, BOS applications, photogrammetry and professional film/TV operations.',
+    aboutP3: 'Pointcloud Manager grew out of this practical work: a local tool for point clouds, drone surveying, photogrammetry, LiDAR data, shape analysis and documentable processing — without forced cloud use and with a focus on traceable workflows.',
+    aboutDemoIntro: 'A reduced online version with feature limits and upgrade/upsell information is available here:',
+    aboutDemoLink: 'Pointcloud Manager – reduced online version',
+    aboutP4: 'Geoid-TIFF 2 PGM Converter applies the same approach to geoid models: raster, spatial reference and coverage are checked locally in the browser, and the PGM export stays traceable through offset, scale and a validation report.',
+    aboutXing: 'XING profile', aboutLinksAria: 'Profiles and projects', aboutCloseAria: 'Close About me dialog', ok: 'OK',
+    licEyebrow: 'Project information', licCloseAria: 'Close copyright dialog',
     themeAuto: 'Interface: automatic (system setting) — click for light',
     themeLight: 'Interface: light — click for dark',
     themeDark: 'Interface: dark — click for automatic',
@@ -208,11 +229,11 @@ const COPY = {
     footerSupport: 'Help / bug report / contact', footerLicenses: 'Licenses / copyright', footerSource: 'Source code',
     kofiAria: 'Support Michael Radeck on Ko-fi',
     imprint: 'Imprint', helpContact: 'Help & contact',
-    licIntro: 'Geoid Forge: © 2026 Michael Radeck. All rights reserved. Libraries, fonts and external services used:',
+    licIntro: 'Geoid-TIFF 2 PGM Converter: © 2026 Michael Radeck. All rights reserved. Libraries, fonts and external services used:',
     licComponent: 'Component', licLicense: 'License', licUse: 'Used for', licAppUse: 'this app',
     licGeotiff: 'reading GeoTIFF', licGeokeys: 'translating GeoKeys into Proj4 definitions', licProj4: 'coordinate conversion',
     licLeaflet: 'map display', licContour: 'footprint outline', licLucide: 'icons', licReact: 'user interface',
-    licNext: 'framework and static export', licGeist: 'typeface', licOsmHolder: '© OpenStreetMap contributors',
+    licNext: 'framework and static export', licFont: 'typeface (self-hosted)', licOsmHolder: '© OpenStreetMap contributors',
     licOsm: 'base map (loaded online)',
     licPrivacy: 'Raw data is never uploaded. Map tiles are loaded from OpenStreetMap.',
     mailSubjectHelp: 'Help / question', mailSubjectBug: 'Bug report', mailSubjectContact: 'Contact',
@@ -270,7 +291,7 @@ const CONTACT_EMAIL = 'michael.radeck@email.de';
 const RELATED_APPS: [string, string][] = [
   ['Geodata Inspector & Cleaner', 'https://geodata-inspector-cleaner.netlify.app/'],
   ['GeoTIFF Inspector', 'https://mradeck.github.io/geotiff-inspector/'],
-  ['MeasureMap', 'https://measuremap-viewer-editor-emlid.netlify.app/'],
+  ['MeasureMap', 'https://measuremap-viewer-editor.netlify.app/'],
   ['DXF Coordinate Forge', 'https://dxf-coordinate-forge.netlify.app/'],
   ['PointCloud Manager', 'https://www.pointcloud-manager.com'],
   ['GPS / UTM Converter', 'https://mradeck.github.io/gps-utm-coordinate-converter/'],
@@ -398,6 +419,8 @@ export default function Home() {
   const [themeMode, setThemeMode] = useState<ThemeMode>('auto');
   const [systemDark, setSystemDark] = useState(false);
   const licensesRef = useRef<HTMLDialogElement>(null);
+  const aboutRef = useRef<HTMLDialogElement>(null);
+  const aboutMenuRef = useRef<HTMLDetailsElement>(null);
   const [preferencesReady, setPreferencesReady] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
   const [contactStatus, setContactStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
@@ -407,8 +430,8 @@ export default function Home() {
   const t = (key: CopyKey) => copy[key];
 
   useEffect(() => {
-    const storedLanguage = window.localStorage.getItem('geoid-forge-language');
-    const storedTheme = window.localStorage.getItem('geoid-forge-theme');
+    const storedLanguage = window.localStorage.getItem('geoid-tiff2pgm-language');
+    const storedTheme = window.localStorage.getItem('geoid-tiff2pgm-theme');
     const nextLanguage: Language = storedLanguage === 'en' || storedLanguage === 'de'
       ? storedLanguage
       : navigator.language.toLowerCase().startsWith('de') ? 'de' : 'en';
@@ -435,19 +458,33 @@ export default function Home() {
     document.documentElement.lang = language;
     document.documentElement.dataset.theme = resolvedTheme;
     document.documentElement.dataset.themeMode = themeMode;
-    const localizedTitle = `${language === 'de' ? 'Geoid Forge — GeoTIFF zu PGM' : 'Geoid Forge — GeoTIFF to PGM'} · ${APP_VERSION_CODE}`;
+    const localizedTitle = `${APP_NAME} — ${language === 'de' ? 'Geoid-GeoTIFF zu PGM' : 'geoid GeoTIFF to PGM'} · ${APP_VERSION_CODE}`;
     document.title = localizedTitle;
     // Next.js setzt den Metadaten-Titel nach dem Hydratisieren erneut; danach den Sprachtitel nachziehen.
     const titleTimer = window.setTimeout(() => { document.title = localizedTitle; }, 300);
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', resolvedTheme === 'dark' ? '#14171c' : '#f3f5f8');
     try {
-      window.localStorage.setItem('geoid-forge-language', language);
-      window.localStorage.setItem('geoid-forge-theme', themeMode);
+      window.localStorage.setItem('geoid-tiff2pgm-language', language);
+      window.localStorage.setItem('geoid-tiff2pgm-theme', themeMode);
     } catch {
       // ohne Speicher gilt die Wahl nur für diese Sitzung
     }
     return () => window.clearTimeout(titleTimer);
   }, [language, preferencesReady, resolvedTheme, themeMode]);
+
+  useEffect(() => {
+    const closeMenu = (event: Event) => {
+      const menu = aboutMenuRef.current;
+      if (!menu?.open) return;
+      if (event instanceof KeyboardEvent ? event.key === 'Escape' : !menu.contains(event.target as Node)) menu.open = false;
+    };
+    document.addEventListener('click', closeMenu);
+    document.addEventListener('keydown', closeMenu);
+    return () => {
+      document.removeEventListener('click', closeMenu);
+      document.removeEventListener('keydown', closeMenu);
+    };
+  }, []);
 
   useEffect(() => {
     if (!contactOpen) return;
@@ -570,13 +607,18 @@ export default function Home() {
 
   const closeContact = () => setContactOpen(false);
 
+  const openFromMenu = (dialog: HTMLDialogElement | null) => {
+    if (aboutMenuRef.current) aboutMenuRef.current.open = false;
+    dialog?.showModal();
+  };
+
   const submitContact = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setContactStatus('sending');
     const formData = new FormData(event.currentTarget);
-    formData.set('form-name', 'geoid-forge-contact');
+    formData.set('form-name', 'geoid-tiff2pgm-contact');
     formData.set('version', APP_VERSION_CODE);
-    formData.set('page', 'https://geoid-forge.netlify.app/');
+    formData.set('page', APP_ORIGIN);
     const body = new URLSearchParams();
     formData.forEach((value, key) => {
       if (typeof value === 'string') body.append(key, value);
@@ -599,7 +641,7 @@ export default function Home() {
   };
 
   const mailSubjectKey: CopyKey = contactCategory === 'bug' ? 'mailSubjectBug' : contactCategory === 'contact' ? 'mailSubjectContact' : 'mailSubjectHelp';
-  const directMailHref = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(`Geoid Forge ${APP_VERSION_CODE} – ${copy[mailSubjectKey]}`)}`;
+  const directMailHref = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(`${APP_NAME} ${APP_VERSION_CODE} – ${copy[mailSubjectKey]}`)}`;
   const footerYear = new Date().getFullYear();
 
   const compressionLabel = analysis?.compressionLabel === 'Unkomprimiert' && language === 'en' ? copy.uncompressed : analysis?.compressionLabel;
@@ -610,25 +652,36 @@ export default function Home() {
     <main className="app-shell">
       <header className="topbar">
         <a className="brand" href="#top" aria-label={t('home')}>
-          <span className="brand-mark" aria-hidden="true">GF</span>
-          <span><strong>Geoid Forge</strong><small>GeoTIFF → PGM<span className="brand-version">{APP_VERSION_CODE}</span></small></span>
+          <span className="brand-mark" aria-hidden="true">G2P</span>
+          <span className="brand-copy">
+            <span className="brand-title-line"><strong>Geoid-TIFF 2 PGM</strong><span className="brand-version">{APP_VERSION_CODE}</span></span>
+            <small>Converter</small>
+          </span>
         </a>
-        <div className="topbar-actions">
-          <a className="method-link" href="#methodik">{t('method')}</a>
-          <div className="privacy-pill"><ShieldCheck size={14} /> {t('local')}</div>
-          <button className="utility-toggle contact-toggle" type="button" onClick={openContact}>
-            <LifeBuoy size={15} /><span>{t('helpContact')}</span>
+        <div className="privacy-chip"><span /><span>{t('local')}</span></div>
+        <nav className="top-actions" aria-label={t('actionsAria')}>
+          <a className="button button-quiet method-link" href="#methodik">{t('method')}</a>
+          <details ref={aboutMenuRef} className="header-menu">
+            <summary className="button button-quiet">{t('aboutMenu')}</summary>
+            <div className="header-menu-panel">
+              <button type="button" onClick={() => openFromMenu(aboutRef.current)}>{t('aboutMe')}</button>
+              <button type="button" onClick={() => openFromMenu(licensesRef.current)}>{t('copyright')}</button>
+            </div>
+          </details>
+          <button className="button button-quiet icon-button help-button" type="button" onClick={openContact}
+            aria-label={t('helpAria')} title={t('help')}>
+            <Info size={18} aria-hidden="true" />
           </button>
-          <button className="utility-toggle icon-btn theme-toggle" type="button"
+          <button className="button button-quiet theme-button" type="button"
             aria-label={t(THEME_LABEL[themeMode])} title={t(THEME_LABEL[themeMode])}
             onClick={() => setThemeMode((value) => NEXT_THEME[value])}>
             {THEME_ICON[themeMode]}
           </button>
-          <button className="utility-toggle icon-btn language-toggle" type="button" aria-label={t('language')} title={t('language')}
+          <button className="button button-quiet language-button" type="button" aria-label={t('language')} title={t('language')}
             onClick={() => setLanguage((value) => value === 'de' ? 'en' : 'de')}>
-            {language === 'de' ? FLAG_DE : FLAG_GB}<b>{language.toUpperCase()}</b>
+            {language === 'de' ? FLAG_DE : FLAG_GB}<span>{language.toUpperCase()}</span>
           </button>
-        </div>
+        </nav>
       </header>
 
       <section className="intro" id="top">
@@ -798,8 +851,8 @@ export default function Home() {
         </div></section>
 
 
-      <form name="geoid-forge-contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
-        <input type="hidden" name="form-name" value="geoid-forge-contact" readOnly />
+      <form name="geoid-tiff2pgm-contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
+        <input type="hidden" name="form-name" value="geoid-tiff2pgm-contact" readOnly />
         <input name="bot-field" />
         <input name="subject" />
         <input name="category" />
@@ -818,7 +871,7 @@ export default function Home() {
           {contactStatus === 'success' ? (
             <div className="contact-success" role="status">
               <span><CheckCircle2 size={25} /></span>
-              <p className="panel-label">Geoid Forge · {APP_VERSION_CODE}</p>
+              <p className="panel-label">{APP_NAME} · {APP_VERSION_CODE}</p>
               <h2 id="contact-title">{t('contactSuccessTitle')}</h2>
               <p>{t('contactSuccessText')}</p>
               <button className="contact-submit" type="button" onClick={closeContact}>{t('close')}</button>
@@ -827,15 +880,15 @@ export default function Home() {
             <>
               <div className="contact-heading">
                 <span><Mail size={21} /></span>
-                <div><p className="panel-label">Geoid Forge · {APP_VERSION_CODE}</p><h2 id="contact-title">{t('contactTitle')}</h2></div>
+                <div><p className="panel-label">{APP_NAME} · {APP_VERSION_CODE}</p><h2 id="contact-title">{t('contactTitle')}</h2></div>
               </div>
               <p className="contact-intro">{t('contactIntro')}</p>
-              <form ref={contactFormRef} name="geoid-forge-contact" method="POST" onSubmit={(event) => void submitContact(event)}>
-                <input type="hidden" name="form-name" value="geoid-forge-contact" />
+              <form ref={contactFormRef} name="geoid-tiff2pgm-contact" method="POST" onSubmit={(event) => void submitContact(event)}>
+                <input type="hidden" name="form-name" value="geoid-tiff2pgm-contact" />
                 <input type="hidden" name="subject" data-remove-prefix="true"
-                  value={`Geoid Forge ${APP_VERSION_CODE} — ${contactCategory}: ${contactTopic || copy.helpContact}`} />
+                  value={`${APP_NAME} ${APP_VERSION_CODE} — ${contactCategory}: ${contactTopic || copy.helpContact}`} />
                 <input type="hidden" name="version" value={APP_VERSION_CODE} />
-                <input type="hidden" name="page" value="https://geoid-forge.netlify.app/" />
+                <input type="hidden" name="page" value={APP_ORIGIN} />
                 <p className="honeypot"><label>Leave this field empty <input name="bot-field" /></label></p>
                 <div className="contact-grid">
                   <label><span>{t('category')}</span><select ref={contactFirstRef} name="category" required value={contactCategory}
@@ -886,14 +939,14 @@ export default function Home() {
 
       <dialog ref={licensesRef} className="app-dialog" aria-labelledby="licenses-title"
         onMouseDown={(event) => { if (event.target === event.currentTarget) event.currentTarget.close(); }}>
-        <div className="dlg-head"><h2 id="licenses-title">{t('footerLicenses')}</h2>
-          <button type="button" aria-label={t('close')} onClick={() => licensesRef.current?.close()}>×</button></div>
+        <div className="dlg-head"><div><p className="eyebrow">{t('licEyebrow')}</p><h2 id="licenses-title">{t('footerLicenses')}</h2></div>
+          <button className="button dlg-close" type="button" aria-label={t('licCloseAria')} onClick={() => licensesRef.current?.close()}>×</button></div>
         <div className="dlg-body">
           <p>{t('licIntro')}</p>
           <table>
             <tbody>
               <tr><th>{t('licComponent')}</th><td><b>{t('licLicense')}</b> · {t('licUse')}</td></tr>
-              <tr><th>Geoid Forge {APP_VERSION_CODE}</th><td>© Michael Radeck · {t('licAppUse')}</td></tr>
+              <tr><th>{APP_NAME} {APP_VERSION_CODE}</th><td>© Michael Radeck · {t('licAppUse')}</td></tr>
               <tr><th>geotiff.js 3.0.5</th><td>MIT · {t('licGeotiff')}</td></tr>
               <tr><th>geotiff-geokeys-to-proj4 2026.08.16</th><td>BSD-3-Clause · {t('licGeokeys')}</td></tr>
               <tr><th>proj4js 2.21.0</th><td>MIT · {t('licProj4')}</td></tr>
@@ -902,12 +955,33 @@ export default function Home() {
               <tr><th>Lucide 1.33.0</th><td>ISC · {t('licLucide')}</td></tr>
               <tr><th>React 19.2.6</th><td>MIT · {t('licReact')}</td></tr>
               <tr><th>Next.js 16.2.6</th><td>MIT · {t('licNext')}</td></tr>
-              <tr><th>Geist / Geist Mono</th><td>SIL OFL 1.1 · {t('licGeist')}</td></tr>
+              <tr><th>Inter (@fontsource-variable/inter 5.3.0)</th><td>SIL OFL 1.1 · © The Inter Project Authors · {t('licFont')}</td></tr>
               <tr><th>OpenStreetMap</th><td>ODbL · {t('licOsmHolder')} · {t('licOsm')}</td></tr>
             </tbody>
           </table>
           <p className="muted" style={{ marginTop: 12 }}>{t('licPrivacy')}</p>
         </div>
+        <div className="dlg-footer"><button className="button" type="button" onClick={() => licensesRef.current?.close()}>{t('ok')}</button></div>
+      </dialog>
+
+      <dialog ref={aboutRef} className="app-dialog" aria-labelledby="about-title"
+        onMouseDown={(event) => { if (event.target === event.currentTarget) event.currentTarget.close(); }}>
+        <div className="dlg-head"><div><p className="eyebrow">{t('aboutEyebrow')}</p><h2 id="about-title">{t('aboutTitle')}</h2>
+          <p>{t('aboutSubtitle')}</p></div>
+          <button className="button dlg-close" type="button" aria-label={t('aboutCloseAria')} onClick={() => aboutRef.current?.close()}>×</button></div>
+        <div className="dlg-body">
+          <p>{t('aboutP1')}</p>
+          <p>{t('aboutP2')}</p>
+          <p>{t('aboutP3')} {t('aboutDemoIntro')} <a href="https://stable-v53--pointcloud-manager.netlify.app/" target="_blank" rel="noopener noreferrer">{t('aboutDemoLink')}</a>.</p>
+          <p>{t('aboutP4')}</p>
+          <nav className="about-links" aria-label={t('aboutLinksAria')}>
+            <a href="https://multikopterschule.de/" target="_blank" rel="noopener noreferrer">multikopterschule.de</a>
+            <a href="https://www.dronemedia-munich.de/" target="_blank" rel="noopener noreferrer">dronemedia-munich.de</a>
+            <a href="https://www.xing.com/profile/Michael_Radeck" target="_blank" rel="noopener noreferrer">{t('aboutXing')}</a>
+            <a href="https://www.crew-united.com/de/Michael-Radeck_71557.html" target="_blank" rel="noopener noreferrer">Crew United</a>
+          </nav>
+        </div>
+        <div className="dlg-footer"><button className="button" type="button" onClick={() => aboutRef.current?.close()}>{t('ok')}</button></div>
       </dialog>
     </>
   );

@@ -1,6 +1,6 @@
 {
-  "name": "geoid-forge",
-  "version": "26.11.1",
+  "name": "geoid-tiff2pgm-converter",
+  "version": "26.12.1",
   "private": true,
   "engines": {
     "node": ">=22.13.0"
@@ -12,6 +12,7 @@
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern .netlify --ignore-pattern out"
   },
   "dependencies": {
+    "@fontsource-variable/inter": "^5.3.0",
     "d3-contour": "^4.0.2",
     "geotiff": "^3.0.5",
     "geotiff-geokeys-to-proj4": "^2026.8.16",
