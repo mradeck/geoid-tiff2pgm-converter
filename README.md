@@ -1,6 +1,6 @@
 # Geoid Forge
 
-Aktuelle App-Version: **v26.08.5.1**
+Aktuelle App-Version: **v26.11.1**
 
 ![Geoid Forge](public/og.png)
 
@@ -25,7 +25,13 @@ Eine browserbasierte Single-Page-App zum Analysieren von GeoTIFF-Geoidmodellen u
 
 ## Versionierung
 
-Geoid Forge folgt wie SkyCheck und PointCloud Manager dem Schema `vYY.MM.major.subversion`. Ein neuer Funktionsstand erhöht `major` und setzt `subversion` auf `0`; reine Fixes erhöhen die letzte Stelle. Die vollständige Versionsnummer steht zentral in `app/lib/version.ts` und wird im Browser-Titel, in der Kopfzeile und in der Fußleiste angezeigt.
+Geoid Forge folgt dem gemeinsamen Schema der öffentlichen Apps von Michael Radeck: `Jahr.Push.Iteration`, z. B. `v26.11.1`.
+
+- `Jahr` — zweistellige Jahreszahl (`26` für 2026)
+- `Push` — laufende Nummer des GitHub-Pushes auf `main` im Jahr
+- `Iteration` — lokale Iteration innerhalb dieses Pushes, beginnt bei `1`
+
+Vor jedem Push auf `main` wird `Push` um eins erhöht und `Iteration` auf `1` gesetzt. Die Versionsnummer steht zentral in `app/lib/version.ts` (Anzeige mit vorangestelltem `v`) und in `package.json` (`26.11.1`). Sie erscheint im Browser-Titel, in der Kopfzeile, in der Fußleiste und im Betreff von Kontakt-Mails. Bis einschließlich `v26.08.5.1` galt das Schema `vYY.MM.major.subversion`.
 
 ## Lokal starten
 

@@ -1,14 +1,16 @@
 # Changelog
 
-## v26.08.5.1 — 2026-11-02
+## v26.11.1 — 2026-11-02
 
+- Versionsschema umgestellt von `vYY.MM.major.subversion` (zuletzt v26.08.5.1) auf `Jahr.Push.Iteration`; der Push-Zähler ist aus der Zahl der `main`-Commits 2026 abgeleitet
 - Einheitliches Erscheinungsbild der öffentlichen Apps von Michael Radeck: neutrales Grau/Blau-Farbschema in hell und dunkel statt des bisherigen Grüntons
 - Interface-Knopf mit drei Stufen automatisch / hell / dunkel; „automatisch“ folgt der Systemeinstellung, die Wahl wird gespeichert und vor dem ersten Zeichnen gesetzt
 - Sprachknopf mit vektorisierter Fahne (DE schwarz-rot-gold, GB Union Jack) und Kürzel DE/EN
 - Zwei Fußleisten: „Weitere Apps“ (Geodata Inspector & Cleaner, GeoTIFF Inspector, MeasureMap, DXF Coordinate Forge, PointCloud Manager, GPS / UTM Converter, SkyCheck, michael-radeck.de) und eine Meta-Leiste mit Version, Datenquellen, Quellcode, Hilfe / Bugreport / Kontakt, Lizenzen / Copyright, Impressum und Ko-fi
 - Neuer Dialog „Lizenzen / Copyright“ mit allen verwendeten Bibliotheken, Schriften und OpenStreetMap
 - Direkter E-Mail-Link im Kontaktdialog trägt jetzt die App-Version im Betreff; Version zusätzlich in der Kopfzeile
-- Build: veraltete `vite.config.ts` (verweist auf die entfernte ChatGPT-Sites-Konfiguration) aus der TypeScript-Prüfung genommen, damit `npm run build:netlify` wieder durchläuft
+- Build repariert: Die `vite.config.ts` importierte die mit dem Entfernen der ChatGPT-Sites-Konfiguration gelöschte Datei `.openai/hosting.json`, wodurch `npm run build:netlify` scheiterte. Die Vite/vinext/Cloudflare/ChatGPT-Sites-Werkzeugkette ist entfernt (`vite.config.ts`, `vinext`, `vite`, `wrangler`, `@cloudflare/*`, `@openai/sites-vite-plugin`, `@vitejs/*`, `react-server-dom-webpack`); `npm run dev` und `npm run build` laufen jetzt wie der Netlify-Build direkt über Next.js
+- Die frühere v26.08.5.1 wurde nie veröffentlicht und geht vollständig in v26.11.1 auf
 
 ## v26.08.5.0 — 2026-08-23
 
