@@ -2,7 +2,7 @@
 
 Live: https://geoid-tiff2pgm-converter.netlify.app/ (bis v26.11.1 unter dem Namen „Geoid Forge“)
 
-Aktuelle App-Version: **v26.12.1**
+Aktuelle App-Version: **v26.12.2**
 
 ![Geoid-TIFF 2 PGM Converter](public/og.png)
 
@@ -35,7 +35,7 @@ Der Geoid-TIFF 2 PGM Converter folgt dem gemeinsamen Schema der öffentlichen Ap
 - `Push` — laufende Nummer des GitHub-Pushes auf `main` im Jahr
 - `Iteration` — lokale Iteration innerhalb dieses Pushes, beginnt bei `1`
 
-Vor jedem Push auf `main` wird `Push` um eins erhöht und `Iteration` auf `1` gesetzt. Die Versionsnummer steht zentral in `app/lib/version.ts` (Anzeige mit vorangestelltem `v`) und in `package.json` (`26.12.1`). Sie erscheint im Browser-Titel, in der Kopfzeile, in der Fußleiste und im Betreff von Kontakt-Mails. Bis einschließlich `v26.08.5.1` galt das Schema `vYY.MM.major.subversion`.
+Vor jedem Push auf `main` wird `Push` um eins erhöht und `Iteration` auf `1` gesetzt. Die Versionsnummer steht zentral in `app/lib/version.ts` (Anzeige mit vorangestelltem `v`) und in `package.json` (`26.12.2`). Sie erscheint im Browser-Titel, in der Kopfzeile, in der Fußleiste und im Betreff von Kontakt-Mails. Bis einschließlich `v26.08.5.1` galt das Schema `vYY.MM.major.subversion`.
 
 ## Lokal starten
 

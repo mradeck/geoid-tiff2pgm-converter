@@ -1,5 +1,10 @@
 # Changelog
 
+## v26.12.2 — 2026-11-02
+
+- Favicon aus dem Markenzeichen der Kopfleiste: „G2P“ in Akzentblau (Inter 700, als Pfade, keine Schrift-Abhängigkeit) in der gerahmten, abgerundeten Kachel (Radius 8/32 ≈ 9/34) mit den Farben des hellen Interface. Ersetzt das bisherige, nirgends eingebundene `favicon.svg` (fremdes Kachel-Logo)
+- Neu `favicon-32.png` und `apple-touch-icon.png` (180 × 180, randlos auf Seitenhintergrund), aus dem SVG gerendert; eingebunden über `metadata.icons` im App-Router-Layout
+
 ## v26.12.1 — 2026-11-02
 
 - Umbenennung: Aus „Geoid Forge“ wird „Geoid-TIFF 2 PGM Converter“, neue Adresse https://geoid-tiff2pgm-converter.netlify.app/ (vorher geoid-forge.netlify.app). Angepasst sind Kopfleiste (Titel „GEOID-TIFF 2 PGM“, Unterzeile „Converter“, Markenzeichen „G2P“), Fenstertitel, Metadaten (Titel, Beschreibung, OpenGraph, Canonical, metadataBase), Mail-Betreffe, Kontaktformular (`geoid-tiff2pgm-contact`), Über-mich-Text, Lizenzdialog, Vorschaubild `og.png`, README und `package.json`-Name. Sprache und Interface-Wahl werden unter neuen Schlüsseln (`geoid-tiff2pgm-*`) gespeichert

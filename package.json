@@ -1,6 +1,6 @@
 {
   "name": "geoid-tiff2pgm-converter",
-  "version": "26.12.1",
+  "version": "26.12.2",
   "private": true,
   "engines": {
     "node": ">=22.13.0"
