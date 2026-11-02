@@ -1,5 +1,24 @@
 # Changelog
 
+## v26.12.3 — 2026-11-02
+
+- Favicon: Variante „Gitter mit Geoid-Welle“ statt „G2P“-Schrift (bei 16 px lesbar).
+
+## v26.12.2 — 2026-11-02
+
+- Favicon aus dem Markenzeichen der Kopfleiste: „G2P“ in Akzentblau (Inter 700, als Pfade, keine Schrift-Abhängigkeit) in der gerahmten, abgerundeten Kachel (Radius 8/32 ≈ 9/34) mit den Farben des hellen Interface. Ersetzt das bisherige, nirgends eingebundene `favicon.svg` (fremdes Kachel-Logo)
+- Neu `favicon-32.png` und `apple-touch-icon.png` (180 × 180, randlos auf Seitenhintergrund), aus dem SVG gerendert; eingebunden über `metadata.icons` im App-Router-Layout
+
+## v26.12.1 — 2026-11-02
+
+- Umbenennung: Aus „Geoid Forge“ wird „Geoid-TIFF 2 PGM Converter“, neue Adresse https://geoid-tiff2pgm-converter.netlify.app/ (vorher geoid-forge.netlify.app). Angepasst sind Kopfleiste (Titel „GEOID-TIFF 2 PGM“, Unterzeile „Converter“, Markenzeichen „G2P“), Fenstertitel, Metadaten (Titel, Beschreibung, OpenGraph, Canonical, metadataBase), Mail-Betreffe, Kontaktformular (`geoid-tiff2pgm-contact`), Über-mich-Text, Lizenzdialog, Vorschaubild `og.png`, README und `package.json`-Name. Sprache und Interface-Wahl werden unter neuen Schlüsseln (`geoid-tiff2pgm-*`) gespeichert
+- Erscheinungsbild an den Geodata Inspector & Cleaner angeglichen: Kopfleiste (Markenzeichen in Rahmenform, Titel in Großbuchstaben mit Version, Unterzeile, Datenschutz-Chip), Buttons im Stil `.button`/`.button-quiet` (Radius 8 px, 12 px), Eyebrows (9 px, Laufweite .22em, Akzentfarbe), ruhigere Überschriften
+- Die sehr große Hero-Überschrift auf 27 px reduziert (wie beim Cleaner); auch die Überschriften von Datensatz-Protokoll und Methodik verkleinert
+- Kopfleiste neu geordnet: Methodik, Menü „Über“ mit „Über mich“ (neuer Dialog) und „Copyright“ (Lizenzdialog), Hilfe als „(i)“-Symbol, Interface-Knopf, Sprachknopf; der Text-Knopf „Hilfe & Kontakt“ entfällt
+- Schrift: Geist über `next/font/google` ersetzt durch Inter, selbst gehostet über `@fontsource-variable/inter` (SIL OFL 1.1); Monospace über `ui-monospace`. Es gehen keine Anfragen mehr an Google-Font-Server
+- Dialoge „Über mich“ und „Lizenzen / Copyright“ im Stil des Cleaners (Eyebrow, Überschrift, OK-Knopf); Lizenzdialog und README führen Inter statt Geist
+- MeasureMap-Link auf https://measuremap-viewer-editor.netlify.app/ umgestellt
+
 ## v26.11.1 — 2026-11-02
 
 - Versionsschema umgestellt von `vYY.MM.major.subversion` (zuletzt v26.08.5.1) auf `Jahr.Push.Iteration`; der Push-Zähler ist aus der Zahl der `main`-Commits 2026 abgeleitet
