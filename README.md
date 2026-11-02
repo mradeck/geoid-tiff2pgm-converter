@@ -1,6 +1,6 @@
 # Geoid Forge
 
-Aktuelle App-Version: **v26.08.5.0**
+Aktuelle App-Version: **v26.08.5.1**
 
 ![Geoid Forge](public/og.png)
 
@@ -16,15 +16,16 @@ Eine browserbasierte Single-Page-App zum Analysieren von GeoTIFF-Geoidmodellen u
 - RayStudio-Preset mit `Offset -108` und `Scale 0.003`
 - NoData-Füllung über den nächsten gültigen Rasterwert oder den Median
 - Kontextbezogene „i“-Hilfen zu Exportparametern, NoData, Kartenabdeckung und Metadaten
-- Umschaltbares helles/dunkles Interface und vollständige deutsche/englische Oberfläche
-- App-Verweise auf PointCloud Manager, GPS2UTM und Geodata Inspector & Cleaner
-- Verweise auf Impressum und Ko-fi
-- Hilfe-, Bugreport- und Kontaktformular über Netlify Forms
+- Neutrales Farbschema (Grau/Blau) wie in den übrigen öffentlichen Apps von Michael Radeck
+- Interface-Knopf automatisch / hell / dunkel (automatisch folgt der Systemeinstellung) und Sprachknopf DE/EN mit Fahne; beide Einstellungen werden im Browser gespeichert
+- Fußleiste „Weitere Apps“ (Geodata Inspector & Cleaner, GeoTIFF Inspector, MeasureMap, DXF Coordinate Forge, PointCloud Manager, GPS / UTM Converter, SkyCheck, michael-radeck.de)
+- Meta-Fußleiste mit Version, OpenStreetMap, BKG, Quellcode, Hilfe / Bugreport / Kontakt, Lizenzen / Copyright, Impressum und Ko-fi
+- Hilfe-, Bugreport- und Kontaktformular über Netlify Forms, direkter E-Mail-Link mit Version im Betreff
 - Vollständig statischer Netlify-Build
 
 ## Versionierung
 
-Geoid Forge folgt wie SkyCheck und PointCloud Manager dem Schema `vYY.MM.major.subversion`. Ein neuer Funktionsstand erhöht `major` und setzt `subversion` auf `0`; reine Fixes erhöhen die letzte Stelle. Die vollständige Versionsnummer steht zentral in `app/lib/version.ts` und wird im Browser-Titel sowie im Footer angezeigt.
+Geoid Forge folgt wie SkyCheck und PointCloud Manager dem Schema `vYY.MM.major.subversion`. Ein neuer Funktionsstand erhöht `major` und setzt `subversion` auf `0`; reine Fixes erhöhen die letzte Stelle. Die vollständige Versionsnummer steht zentral in `app/lib/version.ts` und wird im Browser-Titel, in der Kopfzeile und in der Fußleiste angezeigt.
 
 ## Lokal starten
 
@@ -46,6 +47,20 @@ Der statische Export wird in `out/` erzeugt. Die Build- und Publish-Einstellunge
 ## Format-Hinweis
 
 Der Export folgt dem Netpbm-P5-Format. GeographicLib verwendet für Geoid-PGM-Dateien die Beziehung `Höhe = Offset + Scale × Pixelwert`. GeographicLib selbst erwartet dabei weltweite Raster. Für regionale Modelle wie GCG2016/2023 sollte ein RayStudio-Import deshalb an einem bekannten Kontrollpunkt validiert werden, solange RayStudio kein öffentlich dokumentiertes regionales PGM-Schema bereitstellt.
+
+## Lizenzen der verwendeten Komponenten
+
+| Komponente | Lizenz | Verwendung |
+| --- | --- | --- |
+| geotiff.js 3.0.5 | MIT | GeoTIFF lesen |
+| geotiff-geokeys-to-proj4 2026.08.16 | BSD-3-Clause | GeoKeys in Proj4-Definitionen übersetzen |
+| proj4js 2.21.0 | MIT | Koordinaten umrechnen |
+| Leaflet 1.9.4 | BSD-2-Clause | Kartenanzeige |
+| d3-contour 4.0.2 | ISC | Footprint-Kontur |
+| Lucide 1.33.0 | ISC | Symbole |
+| React 19.2.6 / Next.js 16.2.6 | MIT | Oberfläche, statischer Export |
+| Geist / Geist Mono | SIL OFL 1.1 | Schrift |
+| OpenStreetMap | ODbL | Grundkarte (online geladen) |
 
 ## Technische Grundlagen
 

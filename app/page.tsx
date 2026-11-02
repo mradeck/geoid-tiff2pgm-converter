@@ -7,7 +7,6 @@ import {
   Braces,
   Check,
   CheckCircle2,
-  Coffee,
   Database,
   Download,
   ExternalLink,
@@ -15,20 +14,17 @@ import {
   EyeOff,
   FileText,
   Info,
-  Languages,
   Layers3,
   LifeBuoy,
   LoaderCircle,
   Mail,
   MapPinned,
-  Moon,
   RefreshCw,
   Ruler,
   ShieldCheck,
   Send,
   SlidersHorizontal,
   Sparkles,
-  Sun,
   Upload,
   X,
 } from 'lucide-react';
@@ -45,12 +41,16 @@ import { APP_VERSION_CODE } from './lib/version';
 type Phase = 'idle' | 'reading' | 'ready' | 'error';
 type MetadataTab = 'overview' | 'geokeys' | 'pgm';
 type Language = 'de' | 'en';
-type Theme = 'light' | 'dark';
+type ThemeMode = 'auto' | 'light' | 'dark';
+type ResolvedTheme = 'light' | 'dark';
 
 const COPY = {
   de: {
     home: 'Geoid Forge Startseite', method: 'Methodik', local: 'Datei bleibt lokal',
-    darkMode: 'Dunkles Interface aktivieren', lightMode: 'Helles Interface aktivieren', language: 'Sprache wechseln',
+    themeAuto: 'Interface: automatisch (Systemeinstellung) — klicken für hell',
+    themeLight: 'Interface: hell — klicken für dunkel',
+    themeDark: 'Interface: dunkel — klicken für automatisch',
+    language: 'Sprache: Deutsch — zu Englisch wechseln',
     eyebrow: 'Geoid-Konverter & Metadaten-Analyse', title: 'Geoidraster analysieren und als PGM exportieren',
     lede: 'Prüfe Raster, Koordinatenbezug und Abdeckung. Exportiere anschließend ein binäres 16-Bit-PGM für deinen RayStudio-Workflow.',
     workspace: 'Konverter-Arbeitsbereich', source: 'Quelldatei', load: 'GeoTIFF laden', analyzed: 'analysiert',
@@ -112,12 +112,19 @@ const COPY = {
     technicalBasis: 'Technische Basis', standardsTitle: 'Auf Standards gebaut, nicht auf Dateitricks.',
     standardsText: 'Die Konvertierung folgt dem binären P5-Format. Höhen werden linear als',
     standardsEnd: 'codiert; 16-Bit-Werte werden Big-Endian geschrieben.', pgmSpec: 'PGM-Spezifikation',
-    geographicLib: 'GeographicLib Geoid-Format', sourceCode: 'Quellcode', otherApp: 'Weitere Apps',
-    pointCloudDescription: 'Punktwolken verwalten, prüfen und für weitere Workflows vorbereiten.',
-    gpsDescription: 'GPS-Koordinaten direkt in ETRS89 / UTM, Gauß-Krüger und DHHN2016 umrechnen.',
-    geodataDescription: 'Räumliche Ausreißer in DXF- und GeoJSON-Dateien lokal untersuchen und bereinigen.',
-    legalSupport: 'Rechtliches & Support',
-    imprint: 'Impressum', support: 'Ko-fi', helpContact: 'Hilfe & Kontakt',
+    geographicLib: 'GeographicLib Geoid-Format', sourceCode: 'Quellcode',
+    footerApps: 'Weitere Apps', footerAuthor: 'Ein Werkzeug von Michael Radeck', footerLinks: 'Hilfe und rechtliche Hinweise',
+    footerSupport: 'Hilfe / Bugreport / Kontakt', footerLicenses: 'Lizenzen / Copyright', footerSource: 'Quellcode',
+    kofiAria: 'Michael Radeck auf Ko-fi unterstützen',
+    imprint: 'Impressum', helpContact: 'Hilfe & Kontakt',
+    licIntro: 'Geoid Forge: © 2026 Michael Radeck. Alle Rechte vorbehalten. Verwendete Bibliotheken, Schriften und externe Dienste:',
+    licComponent: 'Komponente', licLicense: 'Lizenz', licUse: 'Verwendung', licAppUse: 'diese App',
+    licGeotiff: 'GeoTIFF lesen', licGeokeys: 'GeoKeys in Proj4-Definitionen übersetzen', licProj4: 'Koordinaten umrechnen',
+    licLeaflet: 'Kartenanzeige', licContour: 'Footprint-Kontur', licLucide: 'Symbole', licReact: 'Oberfläche',
+    licNext: 'Framework und statischer Export', licGeist: 'Schrift', licOsmHolder: '© OpenStreetMap-Mitwirkende',
+    licOsm: 'Grundkarte (online geladen)',
+    licPrivacy: 'Rohdaten werden nicht hochgeladen. Kartenkacheln werden von OpenStreetMap geladen.',
+    mailSubjectHelp: 'Hilfe / Frage', mailSubjectBug: 'Bugreport', mailSubjectContact: 'Kontakt',
     contactTitle: 'Wie können wir helfen?',
     contactIntro: 'Frage stellen, Fehler melden oder direkt Kontakt aufnehmen. Deine Nachricht landet bei Michael Radeck.',
     category: 'Anliegen', categoryHelp: 'Hilfe / Frage', categoryBug: 'Bugreport', categoryContact: 'Kontakt',
@@ -128,14 +135,15 @@ const COPY = {
     sendMessage: 'Nachricht senden', sendingMessage: 'Wird gesendet …', close: 'Schließen',
     contactSuccessTitle: 'Nachricht ist unterwegs.', contactSuccessText: 'Danke! Die Anfrage wurde übermittelt und kann per E-Mail beantwortet werden.',
     contactError: 'Die Nachricht konnte gerade nicht übermittelt werden. Bitte versuche es erneut oder schreibe direkt per E-Mail.',
-    directEmail: 'Direkt per E-Mail',
-    privacyFooter: 'Rohdaten werden nicht hochgeladen. Kartenkacheln werden von OpenStreetMap geladen.',
-    copyright: '© 2026 Michael Radeck. Alle Rechte vorbehalten.', version: 'Version',
+    directEmail: 'Direkt per E-Mail', version: 'Version',
     pgmEmpty: 'Nach der Analyse erscheint hier der PGM-Dateikopf.', binaryData: '… Binärdaten …',
   },
   en: {
-    home: 'Geoid Forge home', method: 'Method', local: 'File stays local', darkMode: 'Enable dark interface',
-    lightMode: 'Enable light interface', language: 'Switch language', eyebrow: 'Geoid converter & metadata analysis',
+    home: 'Geoid Forge home', method: 'Method', local: 'File stays local',
+    themeAuto: 'Interface: automatic (system setting) — click for light',
+    themeLight: 'Interface: light — click for dark',
+    themeDark: 'Interface: dark — click for automatic',
+    language: 'Language: English — switch to German', eyebrow: 'Geoid converter & metadata analysis',
     title: 'Analyze geoid grids and export them as PGM',
     lede: 'Inspect raster data, spatial reference and coverage, then export a binary 16-bit PGM for your RayStudio workflow.',
     workspace: 'Converter workspace', source: 'Source file', load: 'Load GeoTIFF', analyzed: 'analyzed',
@@ -195,12 +203,19 @@ const COPY = {
     technicalBasis: 'Technical foundation', standardsTitle: 'Built on standards, not file tricks.',
     standardsText: 'The conversion follows the binary P5 format. Elevations are encoded linearly as',
     standardsEnd: '; 16-bit values are written in big-endian order.', pgmSpec: 'PGM specification',
-    geographicLib: 'GeographicLib geoid format', sourceCode: 'source code', otherApp: 'More apps',
-    pointCloudDescription: 'Manage, inspect and prepare point clouds for downstream workflows.',
-    gpsDescription: 'Convert GPS coordinates directly to ETRS89 / UTM, Gauss-Krüger and DHHN2016.',
-    geodataDescription: 'Inspect and clean spatial outliers in DXF and GeoJSON files locally.',
-    legalSupport: 'Legal & support',
-    imprint: 'Legal notice', support: 'Ko-fi', helpContact: 'Help & contact',
+    geographicLib: 'GeographicLib geoid format', sourceCode: 'source code',
+    footerApps: 'More apps', footerAuthor: 'A tool by Michael Radeck', footerLinks: 'Help and legal information',
+    footerSupport: 'Help / bug report / contact', footerLicenses: 'Licenses / copyright', footerSource: 'Source code',
+    kofiAria: 'Support Michael Radeck on Ko-fi',
+    imprint: 'Imprint', helpContact: 'Help & contact',
+    licIntro: 'Geoid Forge: © 2026 Michael Radeck. All rights reserved. Libraries, fonts and external services used:',
+    licComponent: 'Component', licLicense: 'License', licUse: 'Used for', licAppUse: 'this app',
+    licGeotiff: 'reading GeoTIFF', licGeokeys: 'translating GeoKeys into Proj4 definitions', licProj4: 'coordinate conversion',
+    licLeaflet: 'map display', licContour: 'footprint outline', licLucide: 'icons', licReact: 'user interface',
+    licNext: 'framework and static export', licGeist: 'typeface', licOsmHolder: '© OpenStreetMap contributors',
+    licOsm: 'base map (loaded online)',
+    licPrivacy: 'Raw data is never uploaded. Map tiles are loaded from OpenStreetMap.',
+    mailSubjectHelp: 'Help / question', mailSubjectBug: 'Bug report', mailSubjectContact: 'Contact',
     contactTitle: 'How can we help?',
     contactIntro: 'Ask a question, report a bug or get in touch directly. Your message goes to Michael Radeck.',
     category: 'Request type', categoryHelp: 'Help / question', categoryBug: 'Bug report', categoryContact: 'Contact',
@@ -211,9 +226,7 @@ const COPY = {
     sendMessage: 'Send message', sendingMessage: 'Sending …', close: 'Close',
     contactSuccessTitle: 'Your message is on its way.', contactSuccessText: 'Thank you! Your request was submitted and can be answered by email.',
     contactError: 'Your message could not be sent right now. Please try again or send an email directly.',
-    directEmail: 'Email directly',
-    privacyFooter: 'Raw data is never uploaded. Map tiles are loaded from OpenStreetMap.',
-    copyright: '© 2026 Michael Radeck. All rights reserved.', version: 'Version',
+    directEmail: 'Email directly', version: 'Version',
     pgmEmpty: 'The PGM file header will appear here after analysis.', binaryData: '… Binary data …',
   },
 } as const;
@@ -239,6 +252,31 @@ const formatBytes = (bytes: number, language: Language) => {
 };
 
 const formatCoordinate = (value: number, language: Language) => `${formatNumber(value, 6, language)}°`;
+
+const FLAG_DE = (
+  <svg className="flag" viewBox="0 0 30 20" aria-hidden="true"><path fill="#000" d="M0 0h30v7H0z" /><path fill="#d00" d="M0 7h30v6H0z" /><path fill="#ffce00" d="M0 13h30v7H0z" /></svg>
+);
+const FLAG_GB = (
+  <svg className="flag" viewBox="0 0 60 40" aria-hidden="true"><defs><clipPath id="gb-clip"><path d="M0 0h60v40H0z" /></clipPath></defs><g clipPath="url(#gb-clip)"><path fill="#012169" d="M0 0h60v40H0z" /><path stroke="#fff" strokeWidth="8" d="m0 0 60 40M0 40 60 0" /><path stroke="#c8102e" strokeWidth="3" d="m0 0 60 40M0 40 60 0" /><path stroke="#fff" strokeWidth="13" d="M30 0v40M0 20h60" /><path stroke="#c8102e" strokeWidth="8" d="M30 0v40M0 20h60" /></g></svg>
+);
+const THEME_ICON: Record<ThemeMode, React.ReactNode> = {
+  auto: <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" strokeWidth="2" /><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor" /></svg>,
+  light: <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="4.5" /><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" /></svg>,
+  dark: <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z" fill="currentColor" /></svg>,
+};
+const THEME_LABEL: Record<ThemeMode, CopyKey> = { auto: 'themeAuto', light: 'themeLight', dark: 'themeDark' };
+const NEXT_THEME: Record<ThemeMode, ThemeMode> = { auto: 'light', light: 'dark', dark: 'auto' };
+const CONTACT_EMAIL = 'michael.radeck@email.de';
+const RELATED_APPS: [string, string][] = [
+  ['Geodata Inspector & Cleaner', 'https://geodata-inspector-cleaner.netlify.app/'],
+  ['GeoTIFF Inspector', 'https://mradeck.github.io/geotiff-inspector/'],
+  ['MeasureMap', 'https://measuremap-viewer-editor-emlid.netlify.app/'],
+  ['DXF Coordinate Forge', 'https://dxf-coordinate-forge.netlify.app/'],
+  ['PointCloud Manager', 'https://www.pointcloud-manager.com'],
+  ['GPS / UTM Converter', 'https://mradeck.github.io/gps-utm-coordinate-converter/'],
+  ['SkyCheck', 'https://skycheck-de.netlify.app/'],
+  ['michael-radeck.de', 'https://www.michael-radeck.de'],
+];
 
 function InfoTip({ title, text, note, openLabel, align = 'start' }: {
   title: string;
@@ -357,7 +395,9 @@ export default function Home() {
   const [generating, setGenerating] = useState(false);
   const [pgmResult, setPgmResult] = useState<PgmResult | null>(null);
   const [language, setLanguage] = useState<Language>('de');
-  const [theme, setTheme] = useState<Theme>('light');
+  const [themeMode, setThemeMode] = useState<ThemeMode>('auto');
+  const [systemDark, setSystemDark] = useState(false);
+  const licensesRef = useRef<HTMLDialogElement>(null);
   const [preferencesReady, setPreferencesReady] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
   const [contactStatus, setContactStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
@@ -372,26 +412,42 @@ export default function Home() {
     const nextLanguage: Language = storedLanguage === 'en' || storedLanguage === 'de'
       ? storedLanguage
       : navigator.language.toLowerCase().startsWith('de') ? 'de' : 'en';
-    const nextTheme: Theme = storedTheme === 'dark' || storedTheme === 'light'
-      ? storedTheme
-      : window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    const nextThemeMode: ThemeMode = storedTheme === 'dark' || storedTheme === 'light' ? storedTheme : 'auto';
+    const media = window.matchMedia('(prefers-color-scheme: dark)');
+    const onSystemChange = () => setSystemDark(media.matches);
+    media.addEventListener('change', onSystemChange);
     const timer = window.setTimeout(() => {
       setLanguage(nextLanguage);
-      setTheme(nextTheme);
+      setThemeMode(nextThemeMode);
+      setSystemDark(media.matches);
       setPreferencesReady(true);
     }, 0);
-    return () => window.clearTimeout(timer);
+    return () => {
+      window.clearTimeout(timer);
+      media.removeEventListener('change', onSystemChange);
+    };
   }, []);
+
+  const resolvedTheme: ResolvedTheme = themeMode === 'auto' ? (systemDark ? 'dark' : 'light') : themeMode;
 
   useEffect(() => {
     if (!preferencesReady) return;
     document.documentElement.lang = language;
-    document.documentElement.dataset.theme = theme;
-    document.title = `${language === 'de' ? 'Geoid Forge — GeoTIFF zu PGM' : 'Geoid Forge — GeoTIFF to PGM'} · ${APP_VERSION_CODE}`;
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#0d1511' : '#f4f3ed');
-    window.localStorage.setItem('geoid-forge-language', language);
-    window.localStorage.setItem('geoid-forge-theme', theme);
-  }, [language, preferencesReady, theme]);
+    document.documentElement.dataset.theme = resolvedTheme;
+    document.documentElement.dataset.themeMode = themeMode;
+    const localizedTitle = `${language === 'de' ? 'Geoid Forge — GeoTIFF zu PGM' : 'Geoid Forge — GeoTIFF to PGM'} · ${APP_VERSION_CODE}`;
+    document.title = localizedTitle;
+    // Next.js setzt den Metadaten-Titel nach dem Hydratisieren erneut; danach den Sprachtitel nachziehen.
+    const titleTimer = window.setTimeout(() => { document.title = localizedTitle; }, 300);
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', resolvedTheme === 'dark' ? '#14171c' : '#f3f5f8');
+    try {
+      window.localStorage.setItem('geoid-forge-language', language);
+      window.localStorage.setItem('geoid-forge-theme', themeMode);
+    } catch {
+      // ohne Speicher gilt die Wahl nur für diese Sitzung
+    }
+    return () => window.clearTimeout(titleTimer);
+  }, [language, preferencesReady, resolvedTheme, themeMode]);
 
   useEffect(() => {
     if (!contactOpen) return;
@@ -542,15 +598,20 @@ export default function Home() {
     }
   };
 
+  const mailSubjectKey: CopyKey = contactCategory === 'bug' ? 'mailSubjectBug' : contactCategory === 'contact' ? 'mailSubjectContact' : 'mailSubjectHelp';
+  const directMailHref = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(`Geoid Forge ${APP_VERSION_CODE} – ${copy[mailSubjectKey]}`)}`;
+  const footerYear = new Date().getFullYear();
+
   const compressionLabel = analysis?.compressionLabel === 'Unkomprimiert' && language === 'en' ? copy.uncompressed : analysis?.compressionLabel;
   const crsName = analysis?.crsName === 'Nicht ausgewiesen' && language === 'en' ? 'Not specified' : analysis?.crsName;
 
   return (
+    <>
     <main className="app-shell">
       <header className="topbar">
         <a className="brand" href="#top" aria-label={t('home')}>
           <span className="brand-mark" aria-hidden="true">GF</span>
-          <span><strong>Geoid Forge</strong><small>GeoTIFF → PGM</small></span>
+          <span><strong>Geoid Forge</strong><small>GeoTIFF → PGM<span className="brand-version">{APP_VERSION_CODE}</span></small></span>
         </a>
         <div className="topbar-actions">
           <a className="method-link" href="#methodik">{t('method')}</a>
@@ -558,15 +619,14 @@ export default function Home() {
           <button className="utility-toggle contact-toggle" type="button" onClick={openContact}>
             <LifeBuoy size={15} /><span>{t('helpContact')}</span>
           </button>
-          <button className="utility-toggle theme-toggle" type="button"
-            aria-label={theme === 'dark' ? t('lightMode') : t('darkMode')}
-            title={theme === 'dark' ? t('lightMode') : t('darkMode')}
-            onClick={() => setTheme((value) => value === 'dark' ? 'light' : 'dark')}>
-            {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+          <button className="utility-toggle icon-btn theme-toggle" type="button"
+            aria-label={t(THEME_LABEL[themeMode])} title={t(THEME_LABEL[themeMode])}
+            onClick={() => setThemeMode((value) => NEXT_THEME[value])}>
+            {THEME_ICON[themeMode]}
           </button>
-          <button className="utility-toggle language-toggle" type="button" aria-label={t('language')} title={t('language')}
+          <button className="utility-toggle icon-btn language-toggle" type="button" aria-label={t('language')} title={t('language')}
             onClick={() => setLanguage((value) => value === 'de' ? 'en' : 'de')}>
-            <Languages size={14} aria-hidden="true" /><span aria-hidden="true">{language === 'de' ? '🇩🇪' : '🇬🇧'}</span><b>{language.toUpperCase()}</b>
+            {language === 'de' ? FLAG_DE : FLAG_GB}<b>{language.toUpperCase()}</b>
           </button>
         </div>
       </header>
@@ -737,23 +797,6 @@ export default function Home() {
           <a href="https://github.com/proj4js/proj4js" target="_blank" rel="noreferrer"><span>Proj4js {t('sourceCode')}</span><ExternalLink size={14} /></a>
         </div></section>
 
-      <footer className="site-footer">
-        <div className="footer-app-card"><p className="panel-label">{t('otherApp')}</p>
-          <div className="footer-app-links">
-            <a href="https://www.pointcloud-manager.com" target="_blank" rel="noreferrer"><span><strong>PointCloud Manager</strong>
-              <small>{t('pointCloudDescription')}</small></span><ExternalLink size={16} /></a>
-            <a href="https://mradeck.github.io/gps-utm-coordinate-converter/" target="_blank" rel="noreferrer"><span><strong>GPS2UTM</strong>
-              <small>{t('gpsDescription')}</small></span><ExternalLink size={16} /></a>
-            <a href="https://geodata-inspector-cleaner.netlify.app/" target="_blank" rel="noreferrer"><span><strong>Geodata Inspector &amp; Cleaner</strong>
-              <small>{t('geodataDescription')}</small></span><ExternalLink size={16} /></a>
-          </div>
-        </div>
-        <div className="footer-meta"><p className="panel-label">{t('legalSupport')}</p><nav aria-label={t('legalSupport')}>
-          <button type="button" onClick={openContact}><LifeBuoy size={13} /> {t('helpContact')}</button>
-          <a href="https://www.multikopterschule.de/Kontakt-Impressum/IMPRESSUM/" target="_blank" rel="noreferrer"><FileText size={13} /> {t('imprint')}</a>
-          <a href="https://ko-fi.com/mradeck/tip" target="_blank" rel="noreferrer"><Coffee size={13} /> {t('support')}</a>
-        </nav><p>{t('privacyFooter')}</p><p>{t('copyright')}</p><span className="version-pill">{t('version')} {APP_VERSION_CODE}</span></div>
-      </footer>
 
       <form name="geoid-forge-contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
         <input type="hidden" name="form-name" value="geoid-forge-contact" readOnly />
@@ -808,7 +851,7 @@ export default function Home() {
                 </div>
                 <div className="contact-note"><ShieldCheck size={15} /><span>{t('contactPrivacy')}</span></div>
                 {contactStatus === 'error' && <div className="contact-error" role="alert"><AlertTriangle size={16} /><span>{t('contactError')}</span></div>}
-                <div className="contact-actions"><span>{t('requiredHint')}</span><a href="mailto:michael.radeck@email.de"><Mail size={13} /> {t('directEmail')}</a>
+                <div className="contact-actions"><span>{t('requiredHint')}</span><a href={directMailHref}><Mail size={13} /> {t('directEmail')}</a>
                   <button className="contact-submit" type="submit" disabled={contactStatus === 'sending'}>
                     {contactStatus === 'sending' ? <LoaderCircle className="spin" size={16} /> : <Send size={16} />}
                     {contactStatus === 'sending' ? t('sendingMessage') : t('sendMessage')}
@@ -819,5 +862,53 @@ export default function Home() {
         </section>
       </div>
     </main>
+
+      <footer className="app-footer">
+        <nav className="related-apps" aria-label={t('footerApps')}>
+          <strong>{t('footerApps')}</strong>
+          {RELATED_APPS.map(([name, href]) => (
+            <a key={href} href={href} target="_blank" rel="noopener noreferrer">{name} <span aria-hidden="true">↗</span></a>
+          ))}
+        </nav>
+        <div className="footer-meta">
+          <span>{t('footerAuthor')} · © <span suppressHydrationWarning>{footerYear}</span> · {t('version')} {APP_VERSION_CODE}</span>
+          <nav className="footer-links" aria-label={t('footerLinks')}>
+            <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap ↗</a>
+            <a href="https://gdz.bkg.bund.de/index.php/default/quasigeoid-der-bundesrepublik-deutschland-quasigeoid.html" target="_blank" rel="noopener noreferrer">BKG · GCG2016/2023 ↗</a>
+            <a href="https://github.com/mradeck/geoid-tiff2pgm-converter" target="_blank" rel="noopener noreferrer">{t('footerSource')} ↗</a>
+            <button type="button" onClick={openContact}>{t('footerSupport')}</button>
+            <button type="button" onClick={() => licensesRef.current?.showModal()}>{t('footerLicenses')}</button>
+            <a href="https://www.multikopterschule.de/Kontakt-Impressum/IMPRESSUM/" target="_blank" rel="noopener noreferrer">{t('imprint')} ↗</a>
+            <a href="https://ko-fi.com/mradeck/tip" target="_blank" rel="noopener noreferrer" aria-label={t('kofiAria')}><span aria-hidden="true">☕</span> Ko-fi</a>
+          </nav>
+        </div>
+      </footer>
+
+      <dialog ref={licensesRef} className="app-dialog" aria-labelledby="licenses-title"
+        onMouseDown={(event) => { if (event.target === event.currentTarget) event.currentTarget.close(); }}>
+        <div className="dlg-head"><h2 id="licenses-title">{t('footerLicenses')}</h2>
+          <button type="button" aria-label={t('close')} onClick={() => licensesRef.current?.close()}>×</button></div>
+        <div className="dlg-body">
+          <p>{t('licIntro')}</p>
+          <table>
+            <tbody>
+              <tr><th>{t('licComponent')}</th><td><b>{t('licLicense')}</b> · {t('licUse')}</td></tr>
+              <tr><th>Geoid Forge {APP_VERSION_CODE}</th><td>© Michael Radeck · {t('licAppUse')}</td></tr>
+              <tr><th>geotiff.js 3.0.5</th><td>MIT · {t('licGeotiff')}</td></tr>
+              <tr><th>geotiff-geokeys-to-proj4 2026.08.16</th><td>BSD-3-Clause · {t('licGeokeys')}</td></tr>
+              <tr><th>proj4js 2.21.0</th><td>MIT · {t('licProj4')}</td></tr>
+              <tr><th>Leaflet 1.9.4</th><td>BSD-2-Clause · {t('licLeaflet')}</td></tr>
+              <tr><th>d3-contour 4.0.2</th><td>ISC · {t('licContour')}</td></tr>
+              <tr><th>Lucide 1.33.0</th><td>ISC · {t('licLucide')}</td></tr>
+              <tr><th>React 19.2.6</th><td>MIT · {t('licReact')}</td></tr>
+              <tr><th>Next.js 16.2.6</th><td>MIT · {t('licNext')}</td></tr>
+              <tr><th>Geist / Geist Mono</th><td>SIL OFL 1.1 · {t('licGeist')}</td></tr>
+              <tr><th>OpenStreetMap</th><td>ODbL · {t('licOsmHolder')} · {t('licOsm')}</td></tr>
+            </tbody>
+          </table>
+          <p className="muted" style={{ marginTop: 12 }}>{t('licPrivacy')}</p>
+        </div>
+      </dialog>
+    </>
   );
 }
