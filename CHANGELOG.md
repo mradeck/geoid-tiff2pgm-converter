@@ -1,5 +1,9 @@
 # Changelog
 
+## v26.12.3 — 2026-11-02
+
+- Favicon: Variante „Gitter mit Geoid-Welle“ statt „G2P“-Schrift (bei 16 px lesbar).
+
 ## v26.12.2 — 2026-11-02
 
 - Favicon aus dem Markenzeichen der Kopfleiste: „G2P“ in Akzentblau (Inter 700, als Pfade, keine Schrift-Abhängigkeit) in der gerahmten, abgerundeten Kachel (Radius 8/32 ≈ 9/34) mit den Farben des hellen Interface. Ersetzt das bisherige, nirgends eingebundene `favicon.svg` (fremdes Kachel-Logo)
